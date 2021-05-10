@@ -15,6 +15,8 @@
  */
 package com.google.android.exoplayer2.castdemo;
 
+import static com.google.android.exoplayer2.util.MimeTypes.AUDIO_FLAC;
+
 import android.net.Uri;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.MediaItem;
@@ -24,7 +26,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/** Utility methods and constants for the Cast demo application. */
+/**
+ * Utility methods and constants for the Cast demo application.
+ */
 /* package */ final class DemoUtil {
 
   public static final String MIME_TYPE_DASH = MimeTypes.APPLICATION_MPD;
@@ -32,7 +36,9 @@ import java.util.List;
   public static final String MIME_TYPE_SS = MimeTypes.APPLICATION_SS;
   public static final String MIME_TYPE_VIDEO_MP4 = MimeTypes.VIDEO_MP4;
 
-  /** The list of samples available in the cast demo app. */
+  /**
+   * The list of samples available in the cast demo app.
+   */
   public static final List<MediaItem> SAMPLES;
 
   static {
@@ -87,8 +93,34 @@ import java.util.List;
             .setDrmLicenseUri("https://proxy.uat.widevine.com/proxy?provider=widevine_test")
             .build());
 
+    samples.add(
+        new MediaItem.Builder()
+            .setUri("http://172.19.60.150/res/【专用音源】如果你是我的传说_6声道.flac")
+            .setMediaMetadata(new MediaMetadata.Builder().setTitle("6声道 flac").build())
+            .setMimeType(AUDIO_FLAC)
+            .build());
+    samples.add(
+        new MediaItem.Builder()
+            .setUri("http://172.19.60.150/res/ac3-5.1_6声道.mkv")
+            .setMediaMetadata(new MediaMetadata.Builder().setTitle("ac3 6声道").build())
+            //.setMimeType()
+            .build());
+    samples.add(
+        new MediaItem.Builder()
+            .setUri("http://172.19.60.150/res/4K6声道AAC复合片段.mov")
+            .setMediaMetadata(new MediaMetadata.Builder().setTitle("aac 6声道").build())
+            //.setMimeType()
+            .build());
+    samples.add(
+        new MediaItem.Builder()
+            .setUri("http://172.19.60.150/res/4K Istanbul City.webm")
+            .setMediaMetadata(new MediaMetadata.Builder().setTitle("4k istanbul").build())
+            //.setMimeType()
+            .build());
+
     SAMPLES = Collections.unmodifiableList(samples);
   }
 
-  private DemoUtil() {}
+  private DemoUtil() {
+  }
 }

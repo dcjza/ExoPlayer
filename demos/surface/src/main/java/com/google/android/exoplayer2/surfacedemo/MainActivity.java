@@ -51,7 +51,12 @@ import java.util.UUID;
 public final class MainActivity extends Activity {
 
   private static final String DEFAULT_MEDIA_URI =
-      "https://storage.googleapis.com/exoplayer-test-media-1/mkv/android-screens-lavf-56.36.100-aac-avc-main-1280x720.mkv";
+//      "https://storage.googleapis.com/exoplayer-test-media-1/mkv/android-screens-lavf-56.36.100-aac-avc-main-1280x720.mkv";
+//            "http://172.19.60.150/res/4K Istanbul City.webm";
+//      "http://172.19.60.150/res/【专用音源】如果你是我的传说_6声道.flac";
+//      "http://172.19.60.150/res/ac3-5.1_6声道.mkv";
+      "http://172.19.60.150/res/4K6声道AAC复合片段.mov";
+
   private static final String SURFACE_CONTROL_NAME = "surfacedemo";
 
   private static final String ACTION_VIEW = "com.google.android.exoplayer.surfacedemo.action.VIEW";

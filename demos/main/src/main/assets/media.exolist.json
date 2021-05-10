@@ -579,5 +579,58 @@
         "uri": "https://storage.googleapis.com/exoplayer-test-media-1/mp4/frame-counter-one-hour.mp4"
       }
     ]
+  },
+  {
+    "name": "本地测试",
+    "samples": [
+      {
+        "name": "4K Istanbul",
+        "uri": "http://172.19.60.150/res/4K Istanbul City.webm"
+      },
+      {
+        "name": "4K 三星",
+        "uri": "http://172.19.60.150/res/DEMO SAMSUNG 4K HDR 60 FPS 2019.mkv"
+      },
+      {
+        "name": "6声道 flac",
+        "uri": "http://172.19.60.150/res/【专用音源】如果你是我的传说_6声道.flac"
+      },
+      {
+        "name": "ac3 5.1",
+        "uri": "http://172.19.60.150/res/ac3-5.1_6声道.mkv"
+      },
+      {
+        "name": "dolby atoms 8声道",
+        "uri": "http://172.19.60.150/res/Dolby_Leaf_Lossless_ATMOS_8声道.mkv"
+      },
+      {
+        "name": "dts 5.1",
+        "uri": "http://172.19.60.150/res/dts5.1_6声道.mkv"
+      },
+      {
+        "name": "lpcm 5.1",
+        "uri": "http://172.19.60.150/res/lpcm5.1_6声道.mkv"
+      },
+      {
+        "name": "4K  AAC",
+        "uri": "http://172.19.60.150/res/4K6声道AAC复合片段.mov"
+      },
+      {
+        "name": "4K AC 3",
+        "uri": "http://172.19.60.150/res/独立日.加长版.Independence.Day.1996.EXTENDED.2160p.H265.10Bits.AC3.5.1-乐之音.mkv"
+      },
+      {
+        "name": "rtmp",
+        "uri": "rtmp://live.aaaa/live-hls/stream_a59b1d0381fa459aaa86236100e9a4de?auth_key=1621232069-0-0-e8ee6980849b776131c8364be8ada0d5"
+      },
+      {
+        "name": "flv",
+        "uri": "http://live.aaaa/live-hls/stream_a59b1d0381fa459aaa86236100e9a4de.flv?auth_key=1621232069-0-0-bfc0a6a15d364cb3355ccf3a35035d0f"
+      },
+      {
+        "name": "hls m3u8",
+        "uri": "http://live.aaaa/live-hls/stream_a59b1d0381fa459aaa86236100e9a4de.m3u8?auth_key=1621232069-0-0-1d63061e2c0ebe0c007311b835b5eda7"
+      }
+    ]
   }
 ]

@@ -86,4 +86,6 @@ dependencies {
     withDecoderExtensionsImplementation project(modulePrefix + 'extension-rtmp')
 }
 
+//Helps with managing cross-library version dependencies between components.
+//管理跨库依赖
 apply plugin: 'com.google.android.gms.strict-version-matcher-plugin'
