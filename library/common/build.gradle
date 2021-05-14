@@ -1,3 +1,5 @@
+import dc.android.env.ConfigX
+
 // Copyright (C) 2020 The Android Open Source Project
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -38,6 +40,8 @@ dependencies {
     testImplementation 'com.squareup.okhttp3:mockwebserver:' + mockWebServerVersion
     testImplementation 'org.robolectric:robolectric:' + robolectricVersion
     testImplementation project(modulePrefix + 'testutils')
+
+    api ConfigX.depes2.logger
 }
 
 ext {

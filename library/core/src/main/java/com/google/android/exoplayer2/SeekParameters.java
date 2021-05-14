@@ -20,6 +20,19 @@ import com.google.android.exoplayer2.util.Assertions;
 import com.google.android.exoplayer2.util.Util;
 
 /**
+ * 适用于搜索的参数。
+ *   *
+ *   * <p>预定义的{@link #EXACT}，{@ link #CLOSEST_SYNC}，{@ link #PREVIOUS_SYNC}和{@link
+ *   * #NEXT_SYNC}参数适用于大多数使用情况。 寻求同步点通常是
+ *   *比精确搜索更快但不准确。
+ *   *
+ *   * <p>在一般情况下，实例在（{@link
+ *   * #toleranceBeforeUs}）和之后（{@link #toleranceAfterUs}）之后的请求搜索位置（{@code x}）。
+ *   *如果一个或多个同步点位于窗口{@code [x-toleranceBeforeUs，x +
+ *   * leranceAfterUs]}，则搜索将执行到窗口内的同步点
+ *   *最接近{@code x}。 如果没有同步点落在窗口内，则将执行搜索以
+ *   * {@code x-toleranceBeforeUs}。 玩家可能需要在内部寻找更早的同步点
+ *   *并丢弃介质，直到到达该位置为止。
  * Parameters that apply to seeking.
  *
  * <p>The predefined {@link #EXACT}, {@link #CLOSEST_SYNC}, {@link #PREVIOUS_SYNC} and {@link

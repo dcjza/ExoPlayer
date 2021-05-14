@@ -78,13 +78,15 @@ import java.util.concurrent.TimeoutException;
  */
 public class SimpleExoPlayer extends BasePlayer
     implements ExoPlayer,
-        Player.AudioComponent,
-        Player.VideoComponent,
-        Player.TextComponent,
-        Player.MetadataComponent,
-        Player.DeviceComponent {
+    Player.AudioComponent,
+    Player.VideoComponent,
+    Player.TextComponent,
+    Player.MetadataComponent,
+    Player.DeviceComponent {
 
-  /** The default timeout for detaching a surface from the player, in milliseconds. */
+  /**
+   * The default timeout for detaching a surface from the player, in milliseconds.
+   */
   public static final long DEFAULT_DETACH_SURFACE_TIMEOUT_MS = 2_000;
 
   /**
@@ -104,13 +106,16 @@ public class SimpleExoPlayer extends BasePlayer
     private BandwidthMeter bandwidthMeter;
     private AnalyticsCollector analyticsCollector;
     private Looper looper;
-    @Nullable private PriorityTaskManager priorityTaskManager;
+    @Nullable
+    private PriorityTaskManager priorityTaskManager;
     private AudioAttributes audioAttributes;
     private boolean handleAudioFocus;
-    @C.WakeMode private int wakeMode;
+    @C.WakeMode
+    private int wakeMode;
     private boolean handleAudioBecomingNoisy;
     private boolean skipSilenceEnabled;
-    @C.VideoScalingMode private int videoScalingMode;
+    @C.VideoScalingMode
+    private int videoScalingMode;
     private boolean useLazyPreparation;
     private SeekParameters seekParameters;
     private LivePlaybackSpeedControl livePlaybackSpeedControl;
@@ -166,9 +171,9 @@ public class SimpleExoPlayer extends BasePlayer
      *
      * <p>See {@link #Builder(Context)} for a list of default values.
      *
-     * @param context A {@link Context}.
+     * @param context          A {@link Context}.
      * @param renderersFactory A factory for creating {@link Renderer Renderers} to be used by the
-     *     player.
+     *                         player.
      */
     public Builder(Context context, RenderersFactory renderersFactory) {
       this(context, renderersFactory, new DefaultExtractorsFactory());
@@ -179,9 +184,9 @@ public class SimpleExoPlayer extends BasePlayer
      *
      * <p>See {@link #Builder(Context)} for a list of default values.
      *
-     * @param context A {@link Context}.
+     * @param context           A {@link Context}.
      * @param extractorsFactory An {@link ExtractorsFactory} used to extract progressive media from
-     *     its container.
+     *                          its container.
      */
     public Builder(Context context, ExtractorsFactory extractorsFactory) {
       this(context, new DefaultRenderersFactory(context), extractorsFactory);
@@ -192,11 +197,11 @@ public class SimpleExoPlayer extends BasePlayer
      *
      * <p>See {@link #Builder(Context)} for a list of default values.
      *
-     * @param context A {@link Context}.
-     * @param renderersFactory A factory for creating {@link Renderer Renderers} to be used by the
-     *     player.
+     * @param context           A {@link Context}.
+     * @param renderersFactory  A factory for creating {@link Renderer Renderers} to be used by the
+     *                          player.
      * @param extractorsFactory An {@link ExtractorsFactory} used to extract progressive media from
-     *     its container.
+     *                          its container.
      */
     public Builder(
         Context context, RenderersFactory renderersFactory, ExtractorsFactory extractorsFactory) {
@@ -216,13 +221,13 @@ public class SimpleExoPlayer extends BasePlayer
      * <p>Note that this constructor is only useful to try and ensure that ExoPlayer's default
      * components can be removed by ProGuard or R8.
      *
-     * @param context A {@link Context}.
-     * @param renderersFactory A factory for creating {@link Renderer Renderers} to be used by the
-     *     player.
-     * @param trackSelector A {@link TrackSelector}.
+     * @param context            A {@link Context}.
+     * @param renderersFactory   A factory for creating {@link Renderer Renderers} to be used by the
+     *                           player.
+     * @param trackSelector      A {@link TrackSelector}.
      * @param mediaSourceFactory A {@link MediaSourceFactory}.
-     * @param loadControl A {@link LoadControl}.
-     * @param bandwidthMeter A {@link BandwidthMeter}.
+     * @param loadControl        A {@link LoadControl}.
+     * @param bandwidthMeter     A {@link BandwidthMeter}.
      * @param analyticsCollector An {@link AnalyticsCollector}.
      */
     public Builder(
@@ -354,7 +359,7 @@ public class SimpleExoPlayer extends BasePlayer
      * C#USAGE_MEDIA} or {@link C#USAGE_GAME}. Other usages will throw an {@link
      * IllegalArgumentException}.
      *
-     * @param audioAttributes {@link AudioAttributes}.
+     * @param audioAttributes  {@link AudioAttributes}.
      * @param handleAudioFocus Whether the player should handle audio focus.
      * @return This builder.
      * @throws IllegalStateException If {@link #build()} has already been called.
@@ -391,12 +396,11 @@ public class SimpleExoPlayer extends BasePlayer
 
     /**
      * Sets whether the player should pause automatically when audio is rerouted from a headset to
-     * device speakers. See the <a
-     * href="https://developer.android.com/guide/topics/media-apps/volume-and-earphones#becoming-noisy">audio
+     * device speakers. See the <a href="https://developer.android.com/guide/topics/media-apps/volume-and-earphones#becoming-noisy">audio
      * becoming noisy</a> documentation for more information.
      *
      * @param handleAudioBecomingNoisy Whether the player should pause automatically when audio is
-     *     rerouted from a headset to device speakers.
+     *                                 rerouted from a headset to device speakers.
      * @return This builder.
      * @throws IllegalStateException If {@link #build()} has already been called.
      */
@@ -582,33 +586,47 @@ public class SimpleExoPlayer extends BasePlayer
   private final WifiLockManager wifiLockManager;
   private final long detachSurfaceTimeoutMs;
 
-  @Nullable private Format videoFormat;
-  @Nullable private Format audioFormat;
-  @Nullable private AudioTrack keepSessionIdAudioTrack;
-  @Nullable private Surface surface;
+  @Nullable
+  private Format videoFormat;
+  @Nullable
+  private Format audioFormat;
+  @Nullable
+  private AudioTrack keepSessionIdAudioTrack;
+  @Nullable
+  private Surface surface;
   private boolean ownsSurface;
-  @C.VideoScalingMode private int videoScalingMode;
-  @Nullable private SurfaceHolder surfaceHolder;
-  @Nullable private TextureView textureView;
+  @C.VideoScalingMode
+  private int videoScalingMode;
+  @Nullable
+  private SurfaceHolder surfaceHolder;
+  @Nullable
+  private TextureView textureView;
   private int surfaceWidth;
   private int surfaceHeight;
-  @Nullable private DecoderCounters videoDecoderCounters;
-  @Nullable private DecoderCounters audioDecoderCounters;
+  @Nullable
+  private DecoderCounters videoDecoderCounters;
+  @Nullable
+  private DecoderCounters audioDecoderCounters;
   private int audioSessionId;
   private AudioAttributes audioAttributes;
   private float audioVolume;
   private boolean skipSilenceEnabled;
   private List<Cue> currentCues;
-  @Nullable private VideoFrameMetadataListener videoFrameMetadataListener;
-  @Nullable private CameraMotionListener cameraMotionListener;
+  @Nullable
+  private VideoFrameMetadataListener videoFrameMetadataListener;
+  @Nullable
+  private CameraMotionListener cameraMotionListener;
   private boolean throwsWhenUsingWrongThread;
   private boolean hasNotifiedFullWrongThreadWarning;
-  @Nullable private PriorityTaskManager priorityTaskManager;
+  @Nullable
+  private PriorityTaskManager priorityTaskManager;
   private boolean isPriorityTaskManagerRegistered;
   private boolean playerReleased;
   private DeviceInfo deviceInfo;
 
-  /** @deprecated Use the {@link Builder} and pass it to {@link #SimpleExoPlayer(Builder)}. */
+  /**
+   * @deprecated Use the {@link Builder} and pass it to {@link #SimpleExoPlayer(Builder)}.
+   */
   @Deprecated
   protected SimpleExoPlayer(
       Context context,
@@ -633,7 +651,9 @@ public class SimpleExoPlayer extends BasePlayer
             .setLooper(applicationLooper));
   }
 
-  /** @param builder The {@link Builder} to obtain all construction parameters. */
+  /**
+   * @param builder The {@link Builder} to obtain all construction parameters.
+   */
   protected SimpleExoPlayer(Builder builder) {
     applicationContext = builder.context.getApplicationContext();
     analyticsCollector = builder.analyticsCollector;
@@ -752,7 +772,8 @@ public class SimpleExoPlayer extends BasePlayer
   /**
    * Sets the video scaling mode.
    *
-   * <p>Note that the scaling mode only applies if a {@link MediaCodec}-based video {@link Renderer}
+   * <p>Note that the scaling mode only applies if a {@link MediaCodec}-based video {@link
+   * Renderer}
    * is enabled and if the output surface is owned by a {@link android.view.SurfaceView}.
    *
    * @param videoScalingMode The {@link C.VideoScalingMode}.
@@ -1015,7 +1036,9 @@ public class SimpleExoPlayer extends BasePlayer
     notifySkipSilenceEnabledChanged();
   }
 
-  /** Returns the {@link AnalyticsCollector} used for collecting analytics events. */
+  /**
+   * Returns the {@link AnalyticsCollector} used for collecting analytics events.
+   */
   public AnalyticsCollector getAnalyticsCollector() {
     return analyticsCollector;
   }
@@ -1043,12 +1066,11 @@ public class SimpleExoPlayer extends BasePlayer
 
   /**
    * Sets whether the player should pause automatically when audio is rerouted from a headset to
-   * device speakers. See the <a
-   * href="https://developer.android.com/guide/topics/media-apps/volume-and-earphones#becoming-noisy">audio
+   * device speakers. See the <a href="https://developer.android.com/guide/topics/media-apps/volume-and-earphones#becoming-noisy">audio
    * becoming noisy</a> documentation for more information.
    *
    * @param handleAudioBecomingNoisy Whether the player should pause automatically when audio is
-   *     rerouted from a headset to device speakers.
+   *                                 rerouted from a headset to device speakers.
    */
   public void setHandleAudioBecomingNoisy(boolean handleAudioBecomingNoisy) {
     verifyApplicationThread();
@@ -1064,7 +1086,7 @@ public class SimpleExoPlayer extends BasePlayer
    * <p>The priority {@link C#PRIORITY_PLAYBACK} will be set while the player is loading.
    *
    * @param priorityTaskManager The {@link PriorityTaskManager}, or null to clear a previously set
-   *     priority task manager.
+   *                            priority task manager.
    */
   public void setPriorityTaskManager(@Nullable PriorityTaskManager priorityTaskManager) {
     verifyApplicationThread();
@@ -1083,25 +1105,33 @@ public class SimpleExoPlayer extends BasePlayer
     this.priorityTaskManager = priorityTaskManager;
   }
 
-  /** Returns the video format currently being played, or null if no video is being played. */
+  /**
+   * Returns the video format currently being played, or null if no video is being played.
+   */
   @Nullable
   public Format getVideoFormat() {
     return videoFormat;
   }
 
-  /** Returns the audio format currently being played, or null if no audio is being played. */
+  /**
+   * Returns the audio format currently being played, or null if no audio is being played.
+   */
   @Nullable
   public Format getAudioFormat() {
     return audioFormat;
   }
 
-  /** Returns {@link DecoderCounters} for video, or null if no video is being played. */
+  /**
+   * Returns {@link DecoderCounters} for video, or null if no video is being played.
+   */
   @Nullable
   public DecoderCounters getVideoDecoderCounters() {
     return videoDecoderCounters;
   }
 
-  /** Returns {@link DecoderCounters} for audio, or null if no audio is being played. */
+  /**
+   * Returns {@link DecoderCounters} for audio, or null if no audio is being played.
+   */
   @Nullable
   public DecoderCounters getAudioDecoderCounters() {
     return audioDecoderCounters;
@@ -1232,7 +1262,9 @@ public class SimpleExoPlayer extends BasePlayer
     return player.getPlaybackSuppressionReason();
   }
 
-  /** @deprecated Use {@link #getPlayerError()} instead. */
+  /**
+   * @deprecated Use {@link #getPlayerError()} instead.
+   */
   @Deprecated
   @Override
   @Nullable
@@ -1247,7 +1279,9 @@ public class SimpleExoPlayer extends BasePlayer
     return player.getPlayerError();
   }
 
-  /** @deprecated Use {@link #prepare()} instead. */
+  /**
+   * @deprecated Use {@link #prepare()} instead.
+   */
   @Deprecated
   @Override
   public void retry() {
@@ -1278,7 +1312,7 @@ public class SimpleExoPlayer extends BasePlayer
 
   /**
    * @deprecated Use {@link #setMediaSource(MediaSource, boolean)} and {@link ExoPlayer#prepare()}
-   *     instead.
+   * instead.
    */
   @Deprecated
   @Override
@@ -1489,7 +1523,8 @@ public class SimpleExoPlayer extends BasePlayer
   }
 
   @Override
-  public @RepeatMode int getRepeatMode() {
+  public @RepeatMode
+  int getRepeatMode() {
     verifyApplicationThread();
     return player.getRepeatMode();
   }
@@ -1711,13 +1746,15 @@ public class SimpleExoPlayer extends BasePlayer
    * Sets whether the player should use a {@link android.os.PowerManager.WakeLock} to ensure the
    * device stays awake for playback, even when the screen is off.
    *
-   * <p>Enabling this feature requires the {@link android.Manifest.permission#WAKE_LOCK} permission.
+   * <p>Enabling this feature requires the {@link android.Manifest.permission#WAKE_LOCK}
+   * permission.
    * It should be used together with a foreground {@link android.app.Service} for use cases where
    * playback can occur when the screen is off (e.g. background audio playback). It is not useful if
    * the screen will always be on during playback (e.g. foreground video playback).
    *
    * @param handleWakeLock Whether the player should use a {@link android.os.PowerManager.WakeLock}
-   *     to ensure the device stays awake for playback, even when the screen is off.
+   *                       to ensure the device stays awake for playback, even when the screen is
+   *                       off.
    * @deprecated Use {@link #setWakeMode(int)} instead.
    */
   @Deprecated
@@ -1728,7 +1765,8 @@ public class SimpleExoPlayer extends BasePlayer
   /**
    * Sets how the player should keep the device awake for playback when the screen is off.
    *
-   * <p>Enabling this feature requires the {@link android.Manifest.permission#WAKE_LOCK} permission.
+   * <p>Enabling this feature requires the {@link android.Manifest.permission#WAKE_LOCK}
+   * permission.
    * It should be used together with a foreground {@link android.app.Service} for use cases where
    * playback occurs and the screen is off (e.g. background audio playback). It is not useful when
    * the screen will be kept on during playback (e.g. foreground video playback).
@@ -1821,7 +1859,8 @@ public class SimpleExoPlayer extends BasePlayer
    *
    * <p>The default is {@code true} and this method will be removed in the future.
    *
-   * @param throwsWhenUsingWrongThread Whether to throw when methods are called from a wrong thread.
+   * @param throwsWhenUsingWrongThread Whether to throw when methods are called from a wrong
+   *                                   thread.
    */
   public void setThrowsWhenUsingWrongThread(boolean throwsWhenUsingWrongThread) {
     this.throwsWhenUsingWrongThread = throwsWhenUsingWrongThread;
@@ -1975,7 +2014,7 @@ public class SimpleExoPlayer extends BasePlayer
    * <p>Use of this method is only required on API level 21 and earlier.
    *
    * @param audioSessionId The audio session ID, or {@link C#AUDIO_SESSION_ID_UNSET} to generate a
-   *     new one.
+   *                       new one.
    * @return The audio session ID.
    */
   private int initializeKeepSessionIdAudioTrack(int audioSessionId) {
@@ -1986,8 +2025,9 @@ public class SimpleExoPlayer extends BasePlayer
     }
     if (keepSessionIdAudioTrack == null) {
       int sampleRate = 4000; // Minimum sample rate supported by the platform.
-      int channelConfig = AudioFormat.CHANNEL_OUT_MONO;
-      @C.PcmEncoding int encoding = C.ENCODING_PCM_16BIT;
+      Log.e("TEST","audio format init session 配置");
+      int channelConfig = AudioFormat.CHANNEL_OUT_STEREO;
+      @C.PcmEncoding int encoding = C.ENCODING_PCM_32BIT;
       int bufferSize = 2; // Use a two byte buffer, as it is not actually used for playback.
       keepSessionIdAudioTrack =
           new AudioTrack(
@@ -2017,15 +2057,15 @@ public class SimpleExoPlayer extends BasePlayer
 
   private final class ComponentListener
       implements VideoRendererEventListener,
-          AudioRendererEventListener,
-          TextOutput,
-          MetadataOutput,
-          SurfaceHolder.Callback,
-          TextureView.SurfaceTextureListener,
-          AudioFocusManager.PlayerControl,
-          AudioBecomingNoisyManager.EventListener,
-          StreamVolumeManager.Listener,
-          Player.EventListener {
+      AudioRendererEventListener,
+      TextOutput,
+      MetadataOutput,
+      SurfaceHolder.Callback,
+      TextureView.SurfaceTextureListener,
+      AudioFocusManager.PlayerControl,
+      AudioBecomingNoisyManager.EventListener,
+      StreamVolumeManager.Listener,
+      Player.EventListener {
 
     // VideoRendererEventListener implementation
 
@@ -2110,6 +2150,8 @@ public class SimpleExoPlayer extends BasePlayer
     @Override
     public void onAudioInputFormatChanged(
         Format format, @Nullable DecoderReuseEvaluation decoderReuseEvaluation) {
+      Log.i("TEST", "audio format 变化" + format);
+
       audioFormat = format;
       analyticsCollector.onAudioInputFormatChanged(format, decoderReuseEvaluation);
     }

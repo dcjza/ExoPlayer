@@ -135,7 +135,7 @@ public interface ExoPlayer extends Player {
 
   /**
    * The default timeout for calls to {@link #release} and {@link #setForegroundMode}, in
-   * milliseconds.
+   * milliseconds.调用{@link #release}和{@link #setForegroundMode}的默认超时时间（以毫秒为单位）。
    */
   long DEFAULT_RELEASE_TIMEOUT_MS = 500;
 

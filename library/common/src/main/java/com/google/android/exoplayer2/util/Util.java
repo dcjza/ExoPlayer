@@ -1634,10 +1634,11 @@ public final class Util {
   }
 
   /**
+   * 返回给定通道数的音频轨道通道配置，如果无法输出，则返回{@link AudioFormat＃CHANNEL_INVALID}。
    * Returns the audio track channel configuration for the given channel count, or {@link
    * AudioFormat#CHANNEL_INVALID} if output is not possible.
    *
-   * @param channelCount The number of channels in the input audio.
+   * @param channelCount The number of channels in the input audio. 6
    * @return The channel configuration or {@link AudioFormat#CHANNEL_INVALID} if output is not
    *     possible.
    */
@@ -1654,7 +1655,7 @@ public final class Util {
       case 5:
         return AudioFormat.CHANNEL_OUT_QUAD | AudioFormat.CHANNEL_OUT_FRONT_CENTER;
       case 6:
-        return AudioFormat.CHANNEL_OUT_5POINT1;
+        return AudioFormat.CHANNEL_OUT_5POINT1;//返回252
       case 7:
         return AudioFormat.CHANNEL_OUT_5POINT1 | AudioFormat.CHANNEL_OUT_BACK_CENTER;
       case 8:

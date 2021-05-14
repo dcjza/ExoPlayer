@@ -47,6 +47,7 @@ import com.google.android.exoplayer2.drm.DrmSession.DrmSessionException;
 import com.google.android.exoplayer2.drm.ExoMediaCrypto;
 import com.google.android.exoplayer2.source.SampleStream;
 import com.google.android.exoplayer2.util.Assertions;
+import com.google.android.exoplayer2.util.Log;
 import com.google.android.exoplayer2.util.MediaClock;
 import com.google.android.exoplayer2.util.MimeTypes;
 import com.google.android.exoplayer2.util.TraceUtil;
@@ -78,18 +79,21 @@ import java.lang.annotation.RetentionPolicy;
  * </ul>
  */
 public abstract class DecoderAudioRenderer<
-        T extends
-            Decoder<DecoderInputBuffer, ? extends SimpleOutputBuffer, ? extends DecoderException>>
+    T extends
+        Decoder<DecoderInputBuffer, ? extends SimpleOutputBuffer, ? extends DecoderException>>
     extends BaseRenderer implements MediaClock {
 
   @Documented
   @Retention(RetentionPolicy.SOURCE)
   @IntDef({
-    REINITIALIZATION_STATE_NONE,
-    REINITIALIZATION_STATE_SIGNAL_END_OF_STREAM,
-    REINITIALIZATION_STATE_WAIT_END_OF_STREAM
+      REINITIALIZATION_STATE_NONE,
+      REINITIALIZATION_STATE_SIGNAL_END_OF_STREAM,
+      REINITIALIZATION_STATE_WAIT_END_OF_STREAM
   })
-  private @interface ReinitializationState {}
+  private @interface ReinitializationState {
+
+  }
+
   /**
    * The decoder does not need to be re-initialized.
    */
@@ -103,7 +107,8 @@ public abstract class DecoderAudioRenderer<
   /**
    * The input format has changed in a way that requires the decoder to be re-initialized, and we've
    * signaled an end of stream to the existing decoder. We're waiting for the decoder to output an
-   * end of stream signal to indicate that it has output any remaining buffers before we release it.
+   * end of stream signal to indicate that it has output any remaining buffers before we release
+   * it.
    */
   private static final int REINITIALIZATION_STATE_WAIT_END_OF_STREAM = 2;
 
@@ -118,14 +123,20 @@ public abstract class DecoderAudioRenderer<
 
   private boolean experimentalKeepAudioTrackOnSeek;
 
-  @Nullable private T decoder;
+  @Nullable
+  private T decoder;
 
-  @Nullable private DecoderInputBuffer inputBuffer;
-  @Nullable private SimpleOutputBuffer outputBuffer;
-  @Nullable private DrmSession decoderDrmSession;
-  @Nullable private DrmSession sourceDrmSession;
+  @Nullable
+  private DecoderInputBuffer inputBuffer;
+  @Nullable
+  private SimpleOutputBuffer outputBuffer;
+  @Nullable
+  private DrmSession decoderDrmSession;
+  @Nullable
+  private DrmSession sourceDrmSession;
 
-  @ReinitializationState private int decoderReinitializationState;
+  @ReinitializationState
+  private int decoderReinitializationState;
   private boolean decoderReceivedBuffers;
   private boolean audioTrackNeedsConfigure;
 
@@ -140,9 +151,10 @@ public abstract class DecoderAudioRenderer<
   }
 
   /**
-   * @param eventHandler A handler to use when delivering events to {@code eventListener}. May be
-   *     null if delivery of events is not required.
-   * @param eventListener A listener of events. May be null if delivery of events is not required.
+   * @param eventHandler    A handler to use when delivering events to {@code eventListener}. May be
+   *                        null if delivery of events is not required.
+   * @param eventListener   A listener of events. May be null if delivery of events is not
+   *                        required.
    * @param audioProcessors Optional {@link AudioProcessor}s that will process audio before output.
    */
   public DecoderAudioRenderer(
@@ -157,12 +169,15 @@ public abstract class DecoderAudioRenderer<
   }
 
   /**
-   * @param eventHandler A handler to use when delivering events to {@code eventListener}. May be
-   *     null if delivery of events is not required.
-   * @param eventListener A listener of events. May be null if delivery of events is not required.
+   * @param eventHandler      A handler to use when delivering events to {@code eventListener}. May
+   *                          be null if delivery of events is not required.
+   * @param eventListener     A listener of events. May be null if delivery of events is not
+   *                          required.
    * @param audioCapabilities The audio capabilities for playback on this device. May be null if the
-   *     default capabilities (no encoded audio passthrough support) should be assumed.
-   * @param audioProcessors Optional {@link AudioProcessor}s that will process audio before output.
+   *                          default capabilities (no encoded audio passthrough support) should be
+   *                          assumed.在此设备上播放的音频功能。 如果应采用默认功能（不支持编码音频直通），则可以为null。
+   * @param audioProcessors   Optional {@link AudioProcessor}s that will process audio before
+   *                          output.
    */
   public DecoderAudioRenderer(
       @Nullable Handler eventHandler,
@@ -173,10 +188,10 @@ public abstract class DecoderAudioRenderer<
   }
 
   /**
-   * @param eventHandler A handler to use when delivering events to {@code eventListener}. May be
-   *     null if delivery of events is not required.
+   * @param eventHandler  A handler to use when delivering events to {@code eventListener}. May be
+   *                      null if delivery of events is not required.
    * @param eventListener A listener of events. May be null if delivery of events is not required.
-   * @param audioSink The sink to which audio will be output.
+   * @param audioSink     The sink to which audio will be output.
    */
   public DecoderAudioRenderer(
       @Nullable Handler eventHandler,
@@ -198,7 +213,8 @@ public abstract class DecoderAudioRenderer<
    *
    * <p>This method is experimental, and will be renamed or removed in a future release.
    *
-   * @param enableKeepAudioTrackOnSeek Whether to keep the {@link android.media.AudioTrack} on seek.
+   * @param enableKeepAudioTrackOnSeek Whether to keep the {@link android.media.AudioTrack} on
+   *                                   seek.
    */
   public void experimentalSetEnableKeepAudioTrackOnSeek(boolean enableKeepAudioTrackOnSeek) {
     this.experimentalKeepAudioTrackOnSeek = enableKeepAudioTrackOnSeek;
@@ -296,8 +312,10 @@ public abstract class DecoderAudioRenderer<
       try {
         // Rendering loop.
         TraceUtil.beginSection("drainAndFeed");
-        while (drainOutputBuffer()) {}
-        while (feedInputBuffer()) {}
+        while (drainOutputBuffer()) {
+        }
+        while (feedInputBuffer()) {
+        }
         TraceUtil.endSection();
       } catch (DecoderException e) {
         throw createRendererException(e, inputFormat);
@@ -312,7 +330,9 @@ public abstract class DecoderAudioRenderer<
     }
   }
 
-  /** See {@link AudioSink.Listener#onPositionDiscontinuity()}. */
+  /**
+   * See {@link AudioSink.Listener#onPositionDiscontinuity()}.
+   */
   @CallSuper
   protected void onPositionDiscontinuity() {
     // We are out of sync so allow currentPositionUs to jump backwards.
@@ -322,9 +342,9 @@ public abstract class DecoderAudioRenderer<
   /**
    * Creates a decoder for the given format.
    *
-   * @param format The format for which a decoder is required.
+   * @param format      The format for which a decoder is required.
    * @param mediaCrypto The {@link ExoMediaCrypto} object required for decoding encrypted content.
-   *     Maybe null and can be ignored if decoder does not handle encrypted content.
+   *                    Maybe null and can be ignored if decoder does not handle encrypted content.
    * @return The decoder.
    * @throws DecoderException If an error occurred creating a suitable decoder.
    */
@@ -345,8 +365,8 @@ public abstract class DecoderAudioRenderer<
    * <p>The default implementation does not allow decoder reuse.
    *
    * @param decoderName The name of the decoder.
-   * @param oldFormat The previous format.
-   * @param newFormat The new format.
+   * @param oldFormat   The previous format.
+   * @param newFormat   The new format.
    * @return The result of the evaluation.
    */
   protected DecoderReuseEvaluation canReuseDecoder(
@@ -357,7 +377,7 @@ public abstract class DecoderAudioRenderer<
 
   private boolean drainOutputBuffer()
       throws ExoPlaybackException, DecoderException, AudioSink.ConfigurationException,
-          AudioSink.InitializationException, AudioSink.WriteException {
+      AudioSink.InitializationException, AudioSink.WriteException {
     if (outputBuffer == null) {
       outputBuffer = decoder.dequeueOutputBuffer();
       if (outputBuffer == null) {
@@ -655,7 +675,10 @@ public abstract class DecoderAudioRenderer<
     encoderDelay = newFormat.encoderDelay;
     encoderPadding = newFormat.encoderPadding;
 
+    Log.i("TEST", "100 DecoderAudioRenderer onInputFormatChanged " + inputFormat);
+
     if (decoder == null) {
+      Log.i("TEST", "decoder 为空时 audio render  " + decoder);
       maybeInitDecoder();
       eventDispatcher.inputFormatChanged(inputFormat, /* decoderReuseEvaluation= */ null);
       return;

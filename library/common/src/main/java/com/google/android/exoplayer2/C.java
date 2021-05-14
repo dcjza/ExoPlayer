@@ -329,6 +329,7 @@ public final class C {
   public static final int CONTENT_TYPE_SONIFICATION =
       android.media.AudioAttributes.CONTENT_TYPE_SONIFICATION;
   /**
+   * 演讲
    * @see android.media.AudioAttributes#CONTENT_TYPE_SPEECH
    */
   public static final int CONTENT_TYPE_SPEECH =
@@ -340,7 +341,7 @@ public final class C {
       android.media.AudioAttributes.CONTENT_TYPE_UNKNOWN;
 
   /**
-   * Flags for audio attributes. Possible flag value is {@link #FLAG_AUDIBILITY_ENFORCED}.
+   * 音频属性的标志 Flags for audio attributes. Possible flag value is {@link #FLAG_AUDIBILITY_ENFORCED}.
    *
    * <p>Note that {@code FLAG_HW_AV_SYNC} is not available because the player takes care of setting
    * the flag when tunneling is enabled via a track selector.
@@ -358,7 +359,7 @@ public final class C {
       android.media.AudioAttributes.FLAG_AUDIBILITY_ENFORCED;
 
   /**
-   * Usage types for audio attributes. One of {@link #USAGE_ALARM}, {@link
+   * 音频属性的使用类型。 Usage types for audio attributes. One of {@link #USAGE_ALARM}, {@link
    * #USAGE_ASSISTANCE_ACCESSIBILITY}, {@link #USAGE_ASSISTANCE_NAVIGATION_GUIDANCE}, {@link
    * #USAGE_ASSISTANCE_SONIFICATION}, {@link #USAGE_ASSISTANT}, {@link #USAGE_GAME}, {@link
    * #USAGE_MEDIA}, {@link #USAGE_NOTIFICATION}, {@link #USAGE_NOTIFICATION_COMMUNICATION_DELAYED},
@@ -460,7 +461,7 @@ public final class C {
       android.media.AudioAttributes.USAGE_VOICE_COMMUNICATION_SIGNALLING;
 
   /**
-   * Capture policies for audio attributes. One of {@link #ALLOW_CAPTURE_BY_ALL}, {@link
+   * 捕获音频属性的策略。Capture policies for audio attributes. One of {@link #ALLOW_CAPTURE_BY_ALL}, {@link
    * #ALLOW_CAPTURE_BY_NONE} or {@link #ALLOW_CAPTURE_BY_SYSTEM}.
    */
   @Documented
@@ -468,11 +469,11 @@ public final class C {
   @IntDef({ALLOW_CAPTURE_BY_ALL, ALLOW_CAPTURE_BY_NONE, ALLOW_CAPTURE_BY_SYSTEM})
   public @interface AudioAllowedCapturePolicy {}
   /** See {@link android.media.AudioAttributes#ALLOW_CAPTURE_BY_ALL}. */
-  public static final int ALLOW_CAPTURE_BY_ALL = AudioAttributes.ALLOW_CAPTURE_BY_ALL;
+  public static final int ALLOW_CAPTURE_BY_ALL = AudioAttributes.ALLOW_CAPTURE_BY_ALL;//可以被任何app录制
   /** See {@link android.media.AudioAttributes#ALLOW_CAPTURE_BY_NONE}. */
-  public static final int ALLOW_CAPTURE_BY_NONE = AudioAttributes.ALLOW_CAPTURE_BY_NONE;
+  public static final int ALLOW_CAPTURE_BY_NONE = AudioAttributes.ALLOW_CAPTURE_BY_NONE;//不被任何app录制
   /** See {@link android.media.AudioAttributes#ALLOW_CAPTURE_BY_SYSTEM}. */
-  public static final int ALLOW_CAPTURE_BY_SYSTEM = AudioAttributes.ALLOW_CAPTURE_BY_SYSTEM;
+  public static final int ALLOW_CAPTURE_BY_SYSTEM = AudioAttributes.ALLOW_CAPTURE_BY_SYSTEM;//被系统app录制
 
   /**
    * Audio focus types. One of {@link #AUDIOFOCUS_NONE}, {@link #AUDIOFOCUS_GAIN}, {@link
@@ -558,7 +559,7 @@ public final class C {
   // )
 
   /**
-   * Video scaling modes for {@link MediaCodec}-based renderers. One of {@link
+   * 基于{@link MediaCodec}的渲染器的视频缩放模式Video scaling modes for {@link MediaCodec}-based renderers. One of {@link
    * #VIDEO_SCALING_MODE_SCALE_TO_FIT} or {@link #VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING}.
    */
   @Documented
@@ -973,7 +974,7 @@ public final class C {
   public static final int NETWORK_TYPE_OTHER = 8;
 
   /**
-   * Mode specifying whether the player should hold a WakeLock and a WifiLock. One of {@link
+   * 指定播放器是否应持有WakeLock和WifiLock的模式。Mode specifying whether the player should hold a WakeLock and a WifiLock. One of {@link
    * #WAKE_MODE_NONE}, {@link #WAKE_MODE_LOCAL} or {@link #WAKE_MODE_NETWORK}.
    */
   @Documented
@@ -981,7 +982,7 @@ public final class C {
   @IntDef({WAKE_MODE_NONE, WAKE_MODE_LOCAL, WAKE_MODE_NETWORK})
   public @interface WakeMode {}
   /**
-   * A wake mode that will not cause the player to hold any locks.
+   * A wake mode that will not cause the player to hold any locks.唤醒模式，不会导致播放器持有任何锁。
    *
    * <p>This is suitable for applications that do not play media with the screen off.
    */

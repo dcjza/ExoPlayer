@@ -25,6 +25,7 @@ import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.MediaMetadata;
 import com.google.android.exoplayer2.util.Assertions;
+import com.google.android.exoplayer2.util.Log;
 import com.google.android.exoplayer2.util.Util;
 import com.google.common.collect.ImmutableList;
 import java.util.ArrayList;
@@ -73,11 +74,13 @@ public class IntentUtil {
       int index = 0;
       while (intent.hasExtra(URI_EXTRA + "_" + index)) {
         Uri uri = Uri.parse(intent.getStringExtra(URI_EXTRA + "_" + index));
+        Log.i("TEST","intent 取地址 "+uri);
         mediaItems.add(createMediaItemFromIntent(uri, intent, /* extrasKeySuffix= */ "_" + index));
         index++;
       }
     } else {
       Uri uri = intent.getData();
+      Log.i("TEST","intent 取地址xxxx2 "+uri);
       mediaItems.add(createMediaItemFromIntent(uri, intent, /* extrasKeySuffix= */ ""));
     }
     return mediaItems;

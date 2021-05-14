@@ -20,6 +20,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.audio.AacUtil;
+import dc.common.Logger;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -491,6 +492,7 @@ public final class MimeTypes {
    */
   @C.Encoding
   public static int getEncoding(String mimeType, @Nullable String codec) {
+    Logger.w(mimeType,codec,"MineTypes.getEncoding....");//audio/ac3,null
     switch (mimeType) {
       case MimeTypes.AUDIO_MPEG:
         return C.ENCODING_MP3;

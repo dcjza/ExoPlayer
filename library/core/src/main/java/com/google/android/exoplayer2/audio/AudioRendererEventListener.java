@@ -29,6 +29,7 @@ import com.google.android.exoplayer2.Renderer;
 import com.google.android.exoplayer2.decoder.DecoderCounters;
 import com.google.android.exoplayer2.decoder.DecoderReuseEvaluation;
 import com.google.android.exoplayer2.util.Assertions;
+import com.google.android.exoplayer2.util.Log;
 
 /**
  * Listener of audio {@link Renderer} events. All methods have no-op default implementations to
@@ -174,6 +175,7 @@ public interface AudioRendererEventListener {
     /** Invokes {@link AudioRendererEventListener#onAudioInputFormatChanged(Format)}. */
     public void inputFormatChanged(
         Format format, @Nullable DecoderReuseEvaluation decoderReuseEvaluation) {
+      Log.i("TEST","audio format 变化来源2 "+format + handler);
       if (handler != null) {
         handler.post(
             () -> castNonNull(listener).onAudioInputFormatChanged(format, decoderReuseEvaluation));

@@ -226,10 +226,11 @@ public class DefaultRenderersFactory implements RenderersFactory {
   }
 
   /**
-   * Sets whether floating point audio should be output when possible.
+   * Sets whether floating point audio should be output when possible.设置是否应尽可能输出浮点音频。
    *
    * <p>Enabling floating point output disables audio processing, but may allow for higher quality
-   * audio output.
+   * audio output.启用浮点输出会禁用音频处理，但可能会带来更高的质量
+   *      音频输出。
    *
    * <p>The default value is {@code false}.
    *

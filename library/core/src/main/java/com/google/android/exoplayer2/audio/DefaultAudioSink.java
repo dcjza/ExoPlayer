@@ -38,6 +38,7 @@ import com.google.android.exoplayer2.util.Assertions;
 import com.google.android.exoplayer2.util.Log;
 import com.google.android.exoplayer2.util.MimeTypes;
 import com.google.android.exoplayer2.util.Util;
+import dc.common.Logger;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -49,6 +50,13 @@ import java.util.Collections;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 
 /**
+ * 播放音频数据。 该实现委托给{@link AudioTrack}并处理播放
+ *   *位置平滑，无阻塞写入和重新配置。
+ *   *
+ *   * <p>如果启用了隧道模式，则必须注意音频处理器不输出缓冲区
+ *   *具有与输入不同的持续时间，并且缓冲处理器必须产生输出
+ *   *对应于输入排队后的最后输入。 这意味着，对于
+ *   *例如，使用隧道传输时无法进行速度调整。
  * Plays audio data. The implementation delegates to an {@link AudioTrack} and handles playback
  * position smoothing, non-blocking writes and reconfiguration.
  *
@@ -222,7 +230,7 @@ public final class DefaultAudioSink implements AudioSink {
 
   private static final int OUTPUT_MODE_PCM = 0;
   private static final int OUTPUT_MODE_OFFLOAD = 1;
-  private static final int OUTPUT_MODE_PASSTHROUGH = 2;
+  private static final int OUTPUT_MODE_PASSTHROUGH = 2;//直通还是pcm
 
   /** A minimum length for the {@link AudioTrack} buffer, in microseconds. */
   private static final long MIN_BUFFER_DURATION_US = 250_000;
@@ -335,6 +343,7 @@ public final class DefaultAudioSink implements AudioSink {
    *
    * @param audioCapabilities The audio capabilities for playback on this device. May be null if the
    *     default capabilities (no encoded audio passthrough support) should be assumed.
+   *     在此设备上播放的音频功能。 如果应采用默认功能（不支持编码音频直通），则可以为null。
    * @param audioProcessors An array of {@link AudioProcessor}s that will process PCM audio before
    *     output. May be empty.
    */
@@ -495,6 +504,8 @@ public final class DefaultAudioSink implements AudioSink {
     int outputChannelConfig;
     int outputPcmFrameSize;
 
+    Logger.w(TAG,"configure方法",inputFormat.toString(),specifiedBufferSize,outputChannels);
+
     if (MimeTypes.AUDIO_RAW.equals(inputFormat.sampleMimeType)) {
       Assertions.checkArgument(Util.isEncodingLinearPcm(inputFormat.pcmEncoding));
 
@@ -541,6 +552,7 @@ public final class DefaultAudioSink implements AudioSink {
       availableAudioProcessors = new AudioProcessor[0];
       outputSampleRate = inputFormat.sampleRate;
       outputPcmFrameSize = C.LENGTH_UNSET;
+      Logger.w(TAG,"configure方法x2",enableOffload,isOffloadedPlaybackSupported(inputFormat, audioAttributes));
       if (enableOffload && isOffloadedPlaybackSupported(inputFormat, audioAttributes)) {
         outputMode = OUTPUT_MODE_OFFLOAD;
         outputEncoding =
@@ -552,6 +564,7 @@ public final class DefaultAudioSink implements AudioSink {
         @Nullable
         Pair<Integer, Integer> encodingAndChannelConfig =
             getEncodingAndChannelConfigForPassthrough(inputFormat, audioCapabilities);
+        Logger.w("pass though x2",encodingAndChannelConfig);;
         if (encodingAndChannelConfig == null) {
           throw new ConfigurationException(
               "Unable to configure passthrough for: " + inputFormat, inputFormat);
@@ -632,7 +645,7 @@ public final class DefaultAudioSink implements AudioSink {
     audioSessionId = audioTrack.getAudioSessionId();
     audioTrackPositionTracker.setAudioTrack(
         audioTrack,
-        /* isPassthrough= */ configuration.outputMode == OUTPUT_MODE_PASSTHROUGH,
+        /* isPassthrough= */ configuration.outputMode == OUTPUT_MODE_PASSTHROUGH,//直通2
         configuration.outputEncoding,
         configuration.outputPcmFrameSize,
         configuration.bufferSize);
@@ -1441,32 +1454,38 @@ public final class DefaultAudioSink implements AudioSink {
 
   private static boolean isPassthroughPlaybackSupported(
       Format format, @Nullable AudioCapabilities audioCapabilities) {
-    return getEncodingAndChannelConfigForPassthrough(format, audioCapabilities) != null;
+    Pair<Integer, Integer> pair = getEncodingAndChannelConfigForPassthrough(format, audioCapabilities) ;
+    Logger.w("pass though",pair); //Pair{5 252}
+    return pair != null;
   }
 
   /**
+   * 返回在直通模式下为指定的{@link Format}配置{@link AudioTrack}时使用的编码和通道配置。 如果不支持格式传递，则返回{@code null}。
    * Returns the encoding and channel config to use when configuring an {@link AudioTrack} in
    * passthrough mode for the specified {@link Format}. Returns {@code null} if passthrough of the
    * format is unsupported.
    *
    * @param format The {@link Format}.
-   * @param audioCapabilities The device audio capabilities.
+   * @param audioCapabilities The device audio capabilities.设备的音频功能。
    * @return The encoding and channel config to use, or {@code null} if passthrough of the format is
-   *     unsupported.
+   *     unsupported.要使用的编码和通道配置，如果不支持该格式的通过，则为{@code null}。
+   *     返回  格式和通道的配置Pair<int,int>，或者 为空时表示不支持直通
    */
   @Nullable
   private static Pair<Integer, Integer> getEncodingAndChannelConfigForPassthrough(
       Format format, @Nullable AudioCapabilities audioCapabilities) {
+    Logger.w(TAG,"getEncodingAndChannelConfigForPassthrough",format,Format.toLogString(format),audioCapabilities);
     if (audioCapabilities == null) {
       return null;
     }
 
     @C.Encoding
-    int encoding =
+    int encoding = //audio/ac3 = 5
         MimeTypes.getEncoding(Assertions.checkNotNull(format.sampleMimeType), format.codecs);
     // Check for encodings that are known to work for passthrough with the implementation in this
     // class. This avoids trying to use passthrough with an encoding where the device/app reports
     // it's capable but it is untested or known to be broken (for example AAC-LC).
+    //检查已知可用于此类实现中的传递的编码。 这样可以避免尝试将直通与设备/应用程序报告其功能但未经测试或已知损坏的编码一起使用（例如AAC-LC）。
     boolean supportedEncoding =
         encoding == C.ENCODING_AC3
             || encoding == C.ENCODING_E_AC3
@@ -1507,7 +1526,7 @@ public final class DefaultAudioSink implements AudioSink {
         channelCount = 6;
       }
     } else {
-      channelCount = format.channelCount;
+      channelCount = format.channelCount;//6
       if (channelCount > audioCapabilities.getMaxChannelCount()) {
         return null;
       }
@@ -1517,7 +1536,7 @@ public final class DefaultAudioSink implements AudioSink {
       return null;
     }
 
-    return Pair.create(encoding, channelConfig);
+    return Pair.create(encoding, channelConfig); //5,252
   }
 
   /**

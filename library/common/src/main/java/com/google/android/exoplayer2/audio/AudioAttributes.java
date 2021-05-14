@@ -21,6 +21,15 @@ import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.util.Util;
 
 /**
+ * 音频播放属性，用于配置基础平台{@link
+ *   * android.media.AudioTrack}。
+ *   *
+ *   * <p>要设置音频属性，请使用{@link Builder}创建一个实例，然后将其传递
+ *   *发送给播放器，或向音频发送{@code Renderer＃MSG_SET_AUDIO_ATTRIBUTES}类型的消息
+ *   *渲染器。
+ *   *
+ *   * <p>此类基于{@link android.media.AudioAttributes}，但可用于所有受支持的类
+ *   * API版本。
  * Attributes for audio playback, which configure the underlying platform {@link
  * android.media.AudioTrack}.
  *
@@ -41,9 +50,9 @@ public final class AudioAttributes {
   public static final class Builder {
 
     private @C.AudioContentType int contentType;
-    private @C.AudioFlags int flags;
-    private @C.AudioUsage int usage;
-    private @C.AudioAllowedCapturePolicy int allowedCapturePolicy;
+    private @C.AudioFlags int flags;  //音频属性的标志
+    private @C.AudioUsage int usage;  //音频属性的使用类型。
+    private @C.AudioAllowedCapturePolicy int allowedCapturePolicy; //捕获音频属性的策略。
 
     /**
      * Creates a new builder for {@link AudioAttributes}.

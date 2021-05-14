@@ -88,7 +88,7 @@ public final class DemoUtil {
   public static RenderersFactory buildRenderersFactory(
       Context context, boolean preferExtensionRenderer) {
     @DefaultRenderersFactory.ExtensionRendererMode
-    int extensionRendererMode =
+    int extensionRendererMode = //0x00000000
         useExtensionRenderers()
             ? (preferExtensionRenderer
                 ? DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER

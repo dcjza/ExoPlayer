@@ -28,7 +28,7 @@ import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.util.Util;
 import java.util.Arrays;
 
-/** Represents the set of audio formats that a device is capable of playing. */
+/** Represents the set of audio formats that a device is capable of playing.表示设备能够播放的一组音频格式。 */
 public final class AudioCapabilities {
 
   private static final int DEFAULT_MAX_CHANNEL_COUNT = 8;
@@ -92,6 +92,8 @@ public final class AudioCapabilities {
   private final int maxChannelCount;
 
   /**
+   * 基于一组受支持的编码和最大通道数来构造新的音频功能。
+   * 应用程序通常应调用getCapabilities（Context）以基于平台发布的功能来获取实例，而不是调用此构造方法。
    * Constructs new audio capabilities based on a set of supported encodings and a maximum channel
    * count.
    *
@@ -100,8 +102,8 @@ public final class AudioCapabilities {
    *
    * @param supportedEncodings Supported audio encodings from {@link android.media.AudioFormat}'s
    *     {@code ENCODING_*} constants. Passing {@code null} indicates that no encodings are
-   *     supported.
-   * @param maxChannelCount The maximum number of audio channels that can be played simultaneously.
+   *     supported. 支持的编码
+   * @param maxChannelCount The maximum number of audio channels that can be played simultaneously.可以同时播放的最大音频通道数。
    */
   public AudioCapabilities(@Nullable int[] supportedEncodings, int maxChannelCount) {
     if (supportedEncodings != null) {

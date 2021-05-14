@@ -71,6 +71,7 @@ public final class TsExtractor implements Extractor {
    */
   public static final int MODE_MULTI_PMT = 0;
   /**
+   * 不管几个PAT都一个PMT
    * Assume only one PMT will be contained in the stream, even if more are declared by the PAT.
    */
   public static final int MODE_SINGLE_PMT = 1;

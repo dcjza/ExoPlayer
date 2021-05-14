@@ -23,6 +23,7 @@ import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.Format;
 import com.google.android.exoplayer2.audio.AudioRendererEventListener;
 import com.google.android.exoplayer2.decoder.DecoderCounters;
+import com.google.android.exoplayer2.util.Log;
 
 /** A {@link FakeRenderer} that supports {@link C#TRACK_TYPE_AUDIO}. */
 public class FakeAudioRenderer extends FakeRenderer {
@@ -53,6 +54,7 @@ public class FakeAudioRenderer extends FakeRenderer {
 
   @Override
   protected void onFormatChanged(Format format) {
+    Log.i("TEST", "103  onFormatChanged " + format);
     eventDispatcher.inputFormatChanged(format, /* decoderReuseEvaluation= */ null);
     eventDispatcher.decoderInitialized(
         /* decoderName= */ "fake.audio.decoder",

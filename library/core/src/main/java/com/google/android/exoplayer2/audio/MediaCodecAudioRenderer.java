@@ -50,6 +50,7 @@ import com.google.android.exoplayer2.mediacodec.MediaCodecSelector;
 import com.google.android.exoplayer2.mediacodec.MediaCodecUtil;
 import com.google.android.exoplayer2.mediacodec.MediaCodecUtil.DecoderQueryException;
 import com.google.android.exoplayer2.mediacodec.MediaFormatUtil;
+import com.google.android.exoplayer2.util.Log;
 import com.google.android.exoplayer2.util.MediaClock;
 import com.google.android.exoplayer2.util.MimeTypes;
 import com.google.android.exoplayer2.util.Util;
@@ -418,6 +419,7 @@ public class MediaCodecAudioRenderer extends MediaCodecRenderer implements Media
   @Nullable
   protected DecoderReuseEvaluation onInputFormatChanged(FormatHolder formatHolder)
       throws ExoPlaybackException {
+    Log.i("TEST", "101  onInputFormatChanged " + formatHolder.format);
     @Nullable DecoderReuseEvaluation evaluation = super.onInputFormatChanged(formatHolder);
     eventDispatcher.inputFormatChanged(formatHolder.format, evaluation);
     return evaluation;

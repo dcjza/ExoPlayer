@@ -32,10 +32,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.exoplayer2.C;
+import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.Player;
-import com.google.android.exoplayer2.RenderersFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.audio.AudioAttributes;
 import com.google.android.exoplayer2.drm.FrameworkMediaDrm;
@@ -57,13 +57,16 @@ import com.google.android.exoplayer2.ui.StyledPlayerView;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.util.ErrorMessageProvider;
 import com.google.android.exoplayer2.util.EventLogger;
+import com.google.android.exoplayer2.util.Log;
 import com.google.android.exoplayer2.util.Util;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-/** An activity that plays media using {@link SimpleExoPlayer}. */
+/**
+ * An activity that plays media using {@link SimpleExoPlayer}.
+ */
 public class PlayerActivity extends AppCompatActivity
     implements OnClickListener, StyledPlayerControlView.VisibilityListener {
 
@@ -228,6 +231,7 @@ public class PlayerActivity extends AppCompatActivity
     if (view == selectTracksButton
         && !isShowingTrackSelectionDialog
         && TrackSelectionDialog.willHaveContent(trackSelector)) {
+      Log.i("TEST", "当前audio format " + player.getAudioFormat().toString());
       isShowingTrackSelectionDialog = true;
       TrackSelectionDialog trackSelectionDialog =
           TrackSelectionDialog.createForTrackSelector(
@@ -250,7 +254,9 @@ public class PlayerActivity extends AppCompatActivity
     setContentView(R.layout.player_activity);
   }
 
-  /** @return Whether initialization was successful. */
+  /**
+   * @return Whether initialization was successful.
+   */
   protected boolean initializePlayer() {
     if (player == null) {
       Intent intent = getIntent();
@@ -261,9 +267,17 @@ public class PlayerActivity extends AppCompatActivity
       }
 
       boolean preferExtensionDecoders =
-          intent.getBooleanExtra(IntentUtil.PREFER_EXTENSION_DECODERS_EXTRA, false);
-      RenderersFactory renderersFactory =
-          DemoUtil.buildRenderersFactory(/* context= */ this, preferExtensionDecoders);
+          intent.getBooleanExtra(IntentUtil.PREFER_EXTENSION_DECODERS_EXTRA, false);//false
+//      RenderersFactory renderersFactory = //默认渲染器
+//          //DemoUtil.buildRenderersFactory(/* context= */ this, preferExtensionDecoders);
+      DefaultRenderersFactory renderersFactory = new DefaultRenderersFactory(this) {
+
+      }.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_OFF)//扩展渲染器
+          .setEnableAudioFloatOutput(true) //浮点输出音频
+          .setEnableAudioOffload(true) //音频卸载
+          .setEnableAudioTrackPlaybackParams(true)  //音频速度？
+          ;
+
       MediaSourceFactory mediaSourceFactory =
           new DefaultMediaSourceFactory(dataSourceFactory)
               .setAdsLoaderProvider(this::getAdsLoader)
@@ -535,4 +549,6 @@ public class PlayerActivity extends AppCompatActivity
     MediaItem.DrmConfiguration drmConfiguration = item.playbackProperties.drmConfiguration;
     return drmConfiguration != null ? drmConfiguration.requestHeaders : null;
   }
+
+
 }

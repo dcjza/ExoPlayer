@@ -597,6 +597,9 @@ public interface Player {
     default void onPositionDiscontinuity(@DiscontinuityReason int reason) {}
 
     /**
+     * 当前播放参数更改时调用。 播放参数可能会因调用{@link #setPlaybackParameters（PlaybackParameters）}而改变，
+     *     或者播放器本身可能会对其进行更改（例如，如果音频播放切换为直通或卸载模式，则无法再进行速度调节）。
+     *      //{@ link #onEvents（Player，Events）}也将被调用以报告此事件以及同一{@link Looper}消息队列迭代中发生的其他事件。
      * Called when the current playback parameters change. The playback parameters may change due to
      * a call to {@link #setPlaybackParameters(PlaybackParameters)}, or the player itself may change
      * them (for example, if audio playback switches to passthrough or offload mode, where speed

@@ -25,6 +25,25 @@ import com.google.android.exoplayer2.util.Assertions;
 import com.google.android.exoplayer2.util.Util;
 
 /**
+ * 一个{@link LivePlaybackSpeedControl}可以使用比例调整播放速度
+ *  * 控制器。
+ *  *
+ *  * <p>控制机制将调整后的速度计算为{@code 1.0 +比例控制因子
+ *  * x（currentLiveOffsetSec-targetLiveOffsetSec）}。如果使用{@code，则使用单位速度（1.0f）
+ *  * currentLiveOffsetSec}比{@link设置的值更接近{@code targetLiveOffsetSec}
+ *  * Builder＃setMaxLiveOffsetErrorMsForUnitSpeed（long）}。
+ *  *
+ *  * <p>结果速度被限制在介质定义的最小和最大速度，即
+ *  *使用{@link Builder＃setFallbackMinPlaybackSpeed（float）}和{@link
+ *  * Builder＃setFallbackMaxPlaybackSpeed（float）}或{@link #DEFAULT_FALLBACK_MIN_PLAYBACK_SPEED
+ *  *最小值}和{@link #DEFAULT_FALLBACK_MAX_PLAYBACK_SPEED最大值}后备默认值。
+ *  *
+ *  * <p>当播放器重新缓冲时，目标实时偏移{@link
+ *  * Builder＃setTargetLiveOffsetIncrementOnRebufferMs（long）增加}调整为减少
+ *  *网络功能。实时播放速度控制也{@link
+ *  * Builder＃setMinPossibleLiveOffsetSmoothingFactor（float）跟踪最短可能的直播时间
+ *  *补偿，以在条件改善时再次降低目标实时补偿。最小可能的生存
+ *  *偏移量是从当前偏移量和缓冲媒体的持续时间得出的。
  * A {@link LivePlaybackSpeedControl} that adjusts the playback speed using a proportional
  * controller.
  *

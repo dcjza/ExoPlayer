@@ -29,7 +29,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.nio.ByteBuffer;
 
 /**
- * A sink that consumes audio data.
+ * A sink that consumes audio data. 接收音频数据的接收器。
  *
  * <p>Before starting playback, specify the input audio format by calling {@link #configure(Format,
  * int, int[])}.
@@ -54,6 +54,30 @@ import java.nio.ByteBuffer;
  * reinitialized as required. For implementations that are not based on platform {@link
  * AudioTrack}s, calling methods relating to audio sessions, audio attributes, and tunneling may
  * have no effect.
+ *
+ * <p>在开始播放之前，请通过调用{@link #configure（Format，
+ *  * int，int []）}。
+ *  *
+ *  * <p>调用{@link #handleBuffer（ByteBuffer，long，int）}写入数据，然后{@link
+ *  * #handleDiscontinuity（）}，当馈送的数据不连续时。致电{@link #play（）}开始
+ *  *播放写入的数据。
+ *  *
+ *  * <p>每当输入格式更改时，调用{@link #configure（Format，int，int []）}。水槽会
+ *  *在下一次调用{@link #handleBuffer（ByteBuffer，long，int）}时重新初始化。
+ *  *
+ *  * <p>调用{@link #flush（）}以使接收器准备好从新的播放位置接收音频数据。
+ *  *
+ *  * <p>在没有更多输入缓冲区时，反复调用{@link #playToEndOfStream（）}以播放所有数据
+ *  *将通过{@link #handleBuffer（ByteBuffer，long，int）}提供，直到下一个{@link
+ *  * #flush（）}。当不再需要该实例时，调用{@link #reset（）}。
+ *  *
+ *  * <p>该实现可由平台{@link AudioTrack}支持。在这种情况下，{@ link
+ *  * #setAudioSessionId（int）}，{@ link #setAudioAttributes（AudioAttributes）}，{@ link
+ *  *＃enableTunnelingV21（）}和{@link #disableTunneling（）}可能会在向其写入数据之前调用
+ *  * 下沉。在将数据写入接收器之后，也可以调用这些方法，在这种情况下
+ *  *根据需要重新初始化。对于不基于平台的实现{@link
+ *  * AudioTrack}，与音频会话，音频属性和隧道有关的调用方法
+ *  *无效。
  */
 public interface AudioSink {
 
@@ -239,7 +263,7 @@ public interface AudioSink {
     SINK_FORMAT_UNSUPPORTED
   })
   @interface SinkFormatSupport {}
-  /** The sink supports the format directly, without the need for internal transcoding. */
+  /** The sink supports the format directly, without the need for internal transcoding.接收器直接支持格式，而无需内部转码 */
   int SINK_FORMAT_SUPPORTED_DIRECTLY = 2;
   /**
    * The sink supports the format, but needs to transcode it internally to do so. Internal
