@@ -35,6 +35,8 @@ import org.checkerframework.checker.nullness.compatqual.NullableType;
  * <p>A {@link MediaPeriod} may only able to provide one {@link SampleStream} corresponding to a
  * group at any given time, however this {@link SampleStream} may adapt between multiple tracks
  * within the group.
+ * 加载对应于{@link Timeline.Period}的媒体，并允许读取该媒体。 如{@link ExoPlayer} Javadoc中所述，所有方法都在播放器的内部播放线程上调用。
+ *    <p> {@ link MediaPeriod}可能只能在任何给定时间提供与一个组相对应的一个{@link SampleStream}，但是此{@link SampleStream}可能会在该组中的多个磁道之间适应。
  */
 public interface MediaPeriod extends SequenceableLoader {
 

@@ -268,6 +268,7 @@ public interface AudioSink {
   /**
    * The sink supports the format, but needs to transcode it internally to do so. Internal
    * transcoding may result in lower quality and higher CPU load in some cases.
+   * 接收器支持格式，但需要在内部对其进行转码。 在某些情况下，内部转码可能会导致质量降低和CPU负载增加。
    */
   int SINK_FORMAT_SUPPORTED_WITH_TRANSCODING = 1;
   /** The sink does not support the format. */
@@ -408,7 +409,7 @@ public interface AudioSink {
   /** Sets the auxiliary effect. */
   void setAuxEffectInfo(AuxEffectInfo auxEffectInfo);
 
-  /**
+  /** 如果可能，启用隧道。 如果先前禁用了隧道，则将重置接收器。 仅当接收器基于平台{@link AudioTrack}，并且要求平台API版本21以上时，才可以启用隧道。
    * Enables tunneling, if possible. The sink is reset if tunneling was previously disabled.
    * Enabling tunneling is only possible if the sink is based on a platform {@link AudioTrack}, and
    * requires platform API version 21 onwards.

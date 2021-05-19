@@ -29,6 +29,7 @@ import java.nio.ByteBuffer;
 /**
  * An {@link AudioProcessor} that skips silence in the input stream. Input and output are 16-bit
  * PCM.
+ * {@link AudioProcessor}，可跳过输入流中的静音。 输入和输出是16位PCM。
  */
 public final class SilenceSkippingAudioProcessor extends BaseAudioProcessor {
 
@@ -89,12 +90,12 @@ public final class SilenceSkippingAudioProcessor extends BaseAudioProcessor {
   private boolean hasOutputNoise;
   private long skippedFrames;
 
-  /** Creates a new silence skipping audio processor. */
+  /** Creates a new silence skipping audio processor.创建一个新的静音跳过音频处理器。 */
   public SilenceSkippingAudioProcessor() {
     this(
-        DEFAULT_MINIMUM_SILENCE_DURATION_US,
-        DEFAULT_PADDING_SILENCE_US,
-        DEFAULT_SILENCE_THRESHOLD_LEVEL);
+        DEFAULT_MINIMUM_SILENCE_DURATION_US,  //150s
+        DEFAULT_PADDING_SILENCE_US,           //20s
+        DEFAULT_SILENCE_THRESHOLD_LEVEL);     //1024
   }
 
   /**
@@ -102,10 +103,12 @@ public final class SilenceSkippingAudioProcessor extends BaseAudioProcessor {
    *
    * @param minimumSilenceDurationUs The minimum duration of audio that must be below {@code
    *     silenceThresholdLevel} to classify that part of audio as silent, in microseconds.
+   *                                 音频的最小持续时间必须低于{@code silenceThresholdLevel}才能将音频的该部分分类为无声，以微秒为单位。
    * @param paddingSilenceUs The duration of silence by which to extend non-silent sections, in
-   *     microseconds. The value must not exceed {@code minimumSilenceDurationUs}.
+   *     microseconds. The value must not exceed {@code minimumSilenceDurationUs}.延长非沉默部分的沉默持续时间（以微秒为单位）。
+   *                         该值不能超过{@code minimumSilenceDurationUs}。
    * @param silenceThresholdLevel The absolute level below which an individual PCM sample is
-   *     classified as silent.
+   *     classified as silent.绝对水平（低于该绝对水平时，单个PCM样本被分类为无声）。
    */
   public SilenceSkippingAudioProcessor(
       long minimumSilenceDurationUs, long paddingSilenceUs, short silenceThresholdLevel) {

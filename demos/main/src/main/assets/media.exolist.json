@@ -597,7 +597,11 @@
       },
       {
         "name": "ac3 5.1",
-        "uri": "http://192.168.64.213/res/ac3-5.1_6声道.mkv"
+        "uri": "http://192.168.8.155/res/ac3-5.1_6声道.mkv"
+      },
+      {
+        "name": "ac3 5.1",
+        "uri": "http://192.168.66.201/res/ac3-5.1_6声道.mkv"
       },
       {
         "name": "ac3 5.1 172.19.60.188 audio配置为auto没有环境会崩",
@@ -621,7 +625,7 @@
       },
       {
         "name": "4K AC 3 不支持",
-        "uri": "http://172.19.60.188/res/独立日.加长版.Independence.Day.1996.EXTENDED.2160p.H265.10Bits.AC3.5.1-乐之音.mkv"
+        "uri": "http://192.168.66.201/res/独立日.加长版.Independence.Day.1996.EXTENDED.2160p.H265.10Bits.AC3.5.1-乐之音.mkv"
       },
       {
         "name": "rtmp",

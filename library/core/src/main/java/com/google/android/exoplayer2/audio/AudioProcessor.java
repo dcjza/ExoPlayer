@@ -27,10 +27,12 @@ import java.nio.ByteOrder;
  *
  * <p>In addition to being able to modify the format of audio, implementations may allow parameters
  * to be set that affect the output audio and whether the processor is active/inactive.
+ * 音频处理器的接口，它将音频数据作为输入并进行转换，从而有可能修改其通道数，编码和/或采样率。
+ * <p>除了能够修改音频的格式外，实现还可以设置影响输出音频以及处理器是否处于活动状态的参数。
  */
 public interface AudioProcessor {
 
-  /** PCM audio format that may be handled by an audio processor. */
+  /** PCM audio format that may be handled by an audio processor.音频处理器可以处理的PCM音频格式。 */
   final class AudioFormat {
     public static final AudioFormat NOT_SET =
         new AudioFormat(

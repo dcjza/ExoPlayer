@@ -18,7 +18,7 @@ package com.google.android.exoplayer2.util;
 import com.google.android.exoplayer2.PlaybackParameters;
 
 /**
- * Tracks the progression of media time.
+ * Tracks the progression of media time.跟踪媒体时间的进度。
  */
 public interface MediaClock {
 

@@ -19,6 +19,7 @@ import com.google.android.exoplayer2.C;
 
 // TODO: Clarify the requirements for implementing this interface [Internal ref: b/36250203].
 /**
+ * 可以与其他加载程序大致同步进行的加载程序。
  * A loader that can proceed in approximate synchronization with other loaders.
  */
 public interface SequenceableLoader {

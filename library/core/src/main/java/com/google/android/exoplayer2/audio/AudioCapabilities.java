@@ -26,6 +26,7 @@ import android.provider.Settings.Global;
 import androidx.annotation.Nullable;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.util.Util;
+import dc.common.Logger;
 import java.util.Arrays;
 
 /** Represents the set of audio formats that a device is capable of playing.表示设备能够播放的一组音频格式。 */
@@ -33,11 +34,11 @@ public final class AudioCapabilities {
 
   private static final int DEFAULT_MAX_CHANNEL_COUNT = 8;
 
-  /** The minimum audio capabilities supported by all devices. */
+  /** The minimum audio capabilities supported by all devices.所有设备支持的最低音频功能。 */
   public static final AudioCapabilities DEFAULT_AUDIO_CAPABILITIES =
       new AudioCapabilities(new int[] {AudioFormat.ENCODING_PCM_16BIT}, DEFAULT_MAX_CHANNEL_COUNT);
 
-  /** Audio capabilities when the device specifies external surround sound. */
+  /** Audio capabilities when the device specifies external surround sound设备指定外部环绕声时的音频功能. */
   private static final AudioCapabilities EXTERNAL_SURROUND_SOUND_CAPABILITIES =
       new AudioCapabilities(
           new int[] {
@@ -66,11 +67,14 @@ public final class AudioCapabilities {
   /* package */ static AudioCapabilities getCapabilities(Context context, @Nullable Intent intent) {
     if (deviceMaySetExternalSurroundSoundGlobalSetting()
         && Global.getInt(context.getContentResolver(), EXTERNAL_SURROUND_SOUND_KEY, 0) == 1) {
+      Logger.w("AudioCapabilities.getCapabilities  第一个return");
       return EXTERNAL_SURROUND_SOUND_CAPABILITIES;
     }
     if (intent == null || intent.getIntExtra(AudioManager.EXTRA_AUDIO_PLUG_STATE, 0) == 0) {
+      Logger.w("AudioCapabilities.getCapabilities  第二个return");
       return DEFAULT_AUDIO_CAPABILITIES;
     }
+    Logger.w("AudioCapabilities.getCapabilities  第三个return");
     return new AudioCapabilities(
         intent.getIntArrayExtra(AudioManager.EXTRA_ENCODINGS),
         intent.getIntExtra(
@@ -78,6 +82,7 @@ public final class AudioCapabilities {
   }
 
   /**
+   * 返回设备用于指定外部环绕声的全局设置{@link Uri}；如果设备不支持此功能，则返回null。
    * Returns the global settings {@link Uri} used by the device to specify external surround sound,
    * or null if the device does not support this functionality.
    */
@@ -106,6 +111,7 @@ public final class AudioCapabilities {
    * @param maxChannelCount The maximum number of audio channels that can be played simultaneously.可以同时播放的最大音频通道数。
    */
   public AudioCapabilities(@Nullable int[] supportedEncodings, int maxChannelCount) {
+    Logger.w("AudioCapabilities",Arrays.toString(supportedEncodings),maxChannelCount);
     if (supportedEncodings != null) {
       this.supportedEncodings = Arrays.copyOf(supportedEncodings, supportedEncodings.length);
       Arrays.sort(this.supportedEncodings);

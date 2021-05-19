@@ -50,7 +50,7 @@ import java.util.ArrayList;
 public class DefaultRenderersFactory implements RenderersFactory {
 
   /**
-   * The default maximum duration for which a video renderer can attempt to seamlessly join an
+   * 视频渲染器可以尝试无缝加入正在进行的播放的默认最大持续时间。The default maximum duration for which a video renderer can attempt to seamlessly join an
    * ongoing playback.
    */
   public static final long DEFAULT_ALLOWED_VIDEO_JOINING_TIME_MS = 5000;
@@ -620,6 +620,7 @@ public class DefaultRenderersFactory implements RenderersFactory {
 
   /**
    * Builds an {@link AudioSink} to which the audio renderers will output.
+   * 构建一个{@link AudioSink}，音频渲染器将输出到该音频。
    *
    * @param context The {@link Context} associated with the player.
    * @param enableFloatOutput Whether to enable use of floating point audio output, if available.

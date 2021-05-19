@@ -27,6 +27,7 @@ import java.io.IOException;
 /**
  * Defines and provides media to be played by an {@link com.google.android.exoplayer2.ExoPlayer}. A
  * MediaSource has two main responsibilities:
+ * 定义并提供由{@link com.google.android.exoplayer2.ExoPlayer}播放的媒体。 MediaSource有两个主要职责：
  *
  * <ul>
  *   <li>To provide the player with a {@link Timeline} defining the structure of its media, and to
@@ -34,9 +35,14 @@ import java.io.IOException;
  *       provides these timelines by calling {@link MediaSourceCaller#onSourceInfoRefreshed} on the
  *       {@link MediaSourceCaller}s passed to {@link #prepareSource(MediaSourceCaller,
  *       TransferListener)}.
+ *       为播放器提供定义其媒体结构的{@link时间线}，并在媒体结构发生变化时提供新的时间线。
+ *       MediaSource通过在传递给{@link #prepareSource（MediaSourceCaller，TransferListener）}的
+ *       {@link MediaSourceCaller}上调用{@link MediaSourceCaller＃onSourceInfoRefreshed}来提供这些时间表
  *   <li>To provide {@link MediaPeriod} instances for the periods in its timeline. MediaPeriods are
  *       obtained by calling {@link #createPeriod(MediaPeriodId, Allocator, long)}, and provide a
  *       way for the player to load and read the media.
+ *       在其时间轴中的时间段内提供{@link MediaPeriod}实例。
+ *       MediaPeriods是通过调用{@link #createPeriod（MediaPeriodId，Allocator，long）}获得的，并为播放器提供了一种加载和读取媒体的方式。
  * </ul>
  *
  * All methods are called on the player's internal playback thread, as described in the {@link

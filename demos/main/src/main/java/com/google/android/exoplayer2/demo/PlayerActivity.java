@@ -273,9 +273,9 @@ public class PlayerActivity extends AppCompatActivity
       DefaultRenderersFactory renderersFactory = new DefaultRenderersFactory(this) {
 
       }.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_OFF)//扩展渲染器
-          .setEnableAudioFloatOutput(true) //浮点输出音频
-          .setEnableAudioOffload(true) //音频卸载
-          .setEnableAudioTrackPlaybackParams(true)  //音频速度？
+//          .setEnableAudioFloatOutput(true) //浮点输出音频
+//          .setEnableAudioOffload(true) //音频卸载
+//          .setEnableAudioTrackPlaybackParams(true)  //音频速度？
           ;
 
       MediaSourceFactory mediaSourceFactory =

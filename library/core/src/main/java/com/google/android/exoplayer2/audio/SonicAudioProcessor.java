@@ -27,6 +27,7 @@ import java.nio.ShortBuffer;
 
 /**
  * An {@link AudioProcessor} that uses the Sonic library to modify audio speed/pitch/sample rate.
+ * 一个{@link AudioProcessor}，它使用Sonic库来修改音频速度/音高/采样率。
  */
 public final class SonicAudioProcessor implements AudioProcessor {
 
@@ -60,7 +61,7 @@ public final class SonicAudioProcessor implements AudioProcessor {
   private long outputBytes;
   private boolean inputEnded;
 
-  /** Creates a new Sonic audio processor. */
+  /** Creates a new Sonic audio processor.创建一个新的 音速 音频处理器。 */
   public SonicAudioProcessor() {
     speed = 1f;
     pitch = 1f;

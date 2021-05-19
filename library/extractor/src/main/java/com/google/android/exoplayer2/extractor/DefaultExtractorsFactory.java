@@ -46,6 +46,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 一个{@link ExtractorsFactory}，它提供以下格式的提取器数组：
  * An {@link ExtractorsFactory} that provides an array of extractors for the following formats:
  *
  * <ul>

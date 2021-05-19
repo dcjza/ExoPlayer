@@ -745,19 +745,19 @@ public interface Player {
   @Retention(RetentionPolicy.SOURCE)
   @IntDef({STATE_IDLE, STATE_BUFFERING, STATE_READY, STATE_ENDED})
   @interface State {}
-  /** The player does not have any media to play. */
+  /** The player does not have any media to play播放器没有任何媒体可播放. */
   int STATE_IDLE = 1;
   /**
    * The player is not able to immediately play from its current position. This state typically
-   * occurs when more data needs to be loaded.
+   * occurs when more data needs to be loaded播放器无法立即从其当前位置播放。 此状态通常在需要加载更多数据时发生.
    */
   int STATE_BUFFERING = 2;
   /**
    * The player is able to immediately play from its current position. The player will be playing if
-   * {@link #getPlayWhenReady()} is true, and paused otherwise.
+   * {@link #getPlayWhenReady()} is true, and paused otherwise.可以立即从其当前位置开始播放。 如果{@link #getPlayWhenReady（）}为true，则播放器将在播放，否则暂停。
    */
   int STATE_READY = 3;
-  /** The player has finished playing the media. */
+  /** The player has finished playing the media播放器已完成播放媒体. */
   int STATE_ENDED = 4;
 
   /**

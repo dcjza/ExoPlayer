@@ -50,13 +50,9 @@ import java.util.Collections;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 
 /**
- * 播放音频数据。 该实现委托给{@link AudioTrack}并处理播放
- *   *位置平滑，无阻塞写入和重新配置。
- *   *
- *   * <p>如果启用了隧道模式，则必须注意音频处理器不输出缓冲区
- *   *具有与输入不同的持续时间，并且缓冲处理器必须产生输出
- *   *对应于输入排队后的最后输入。 这意味着，对于
- *   *例如，使用隧道传输时无法进行速度调整。
+ * 播放音频数据。 该实现委托给{@link AudioTrack}并处理播放位置的平滑，无阻塞写入和重新配置。
+ * <p>如果启用了隧道模式，则必须注意音频处理器输出的缓冲区的持续时间与其输入的持续时间不同，
+ * 并且缓冲区处理器必须在输入排队后立即生成与其最后输入相对应的输出。 这意味着，例如，在使用隧道传输时无法进行速度调节。
  * Plays audio data. The implementation delegates to an {@link AudioTrack} and handles playback
  * position smoothing, non-blocking writes and reconfiguration.
  *
@@ -90,6 +86,8 @@ public final class DefaultAudioSink implements AudioSink {
    * stretch/compress audio, the sink will query the chain for information on how to transform its
    * output position to map it onto a media position, via {@link #getMediaDuration(long)} and {@link
    * #getSkippedOutputFrameCount()}.
+   * 提供一串音频处理器，这些音频处理器用于任何用户定义的处理和应用播放参数（如果支持）。
+   * 由于应用播放参数可以跳过和拉伸/压缩音频，因此接收器将通过{@link #getMediaDuration（long）}和{@link＃ getSkippedOutputFrameCount（）}。
    */
   public interface AudioProcessorChain {
 
@@ -104,6 +102,8 @@ public final class DefaultAudioSink implements AudioSink {
      * Configures audio processors to apply the specified playback parameters immediately, returning
      * the new playback parameters, which may differ from those passed in. Only called when
      * processors have no input pending.
+     * 返回将处理音频的音频处理器的固定链。
+     * 此方法在初始化期间被调用一次，但是音频处理器可以将状态更改为在播放过程中变为活动/非活动状态。
      *
      * @param playbackParameters The playback parameters to try to apply.
      * @return The playback parameters that were actually applied.
@@ -113,6 +113,7 @@ public final class DefaultAudioSink implements AudioSink {
     /**
      * Configures audio processors to apply whether to skip silences immediately, returning the new
      * value. Only called when processors have no input pending.
+     * 配置音频处理器以应用是否立即跳过静音，并返回新值。 仅当处理器没有输入待处理时才调用。
      *
      * @param skipSilenceEnabled Whether silences should be skipped in the audio stream.
      * @return The new value.
@@ -126,6 +127,8 @@ public final class DefaultAudioSink implements AudioSink {
      * <p>The scaling performed by this method will use the actual playback speed achieved by the
      * audio processor chain, on average, since it was last flushed. This may differ very slightly
      * from the target playback speed.
+     * 返回与指定的播放持续时间相对应的媒体持续时间，同时考虑到由于音频处理而导致的速度调整。
+     * <p>通过此方法执行的缩放将平均使用音频处理器链自上次刷新以来所达到的实际播放速度。 这可能与目标播放速度略有不同。
      *
      * @param playoutDuration The playout duration to scale.
      * @return The corresponding media duration, in the same units as {@code duration}.
@@ -142,6 +145,7 @@ public final class DefaultAudioSink implements AudioSink {
   /**
    * The default audio processor chain, which applies a (possibly empty) chain of user-defined audio
    * processors followed by {@link SilenceSkippingAudioProcessor} and {@link SonicAudioProcessor}.
+   * 默认音频处理器链，它应用（可能为空）用户定义的音频处理器链，后跟{@link SilenceSkippingAudioProcessor}和{@link SonicAudioProcessor}。
    */
   public static class DefaultAudioProcessorChain implements AudioProcessorChain {
 
@@ -160,13 +164,14 @@ public final class DefaultAudioSink implements AudioSink {
     /**
      * Creates a new default chain of audio processors, with the user-defined {@code
      * audioProcessors} applied before silence skipping and speed adjustment processors.
+     * 创建一个新的默认音频处理器链，并在静音跳过和速度调整处理器之前应用用户定义的{@code audioProcessors}。
      */
     public DefaultAudioProcessorChain(
-        AudioProcessor[] audioProcessors,
+        AudioProcessor[] audioProcessors,  //空
         SilenceSkippingAudioProcessor silenceSkippingAudioProcessor,
         SonicAudioProcessor sonicAudioProcessor) {
       // The passed-in type may be more specialized than AudioProcessor[], so allocate a new array
-      // rather than using Arrays.copyOf.
+      // rather than using Arrays.copyOf.传入的类型可能比AudioProcessor []更专用，因此请分配一个新数组，而不要使用Arrays.copyOf。
       this.audioProcessors = new AudioProcessor[audioProcessors.length + 2];
       System.arraycopy(
           /* src= */ audioProcessors,
@@ -379,8 +384,9 @@ public final class DefaultAudioSink implements AudioSink {
   /**
    * Creates a new default audio sink, optionally using float output for high resolution PCM and
    * with the specified {@code audioProcessorChain}.
+   * 创建一个新的默认音频接收器，还可以选择将浮点输出用于高分辨率PCM，并使用指定的{@code audioProcessorChain}。
    *
-   * @param audioCapabilities The audio capabilities for playback on this device. May be null if the
+   * @param audioCapabilities The audio capabilities for playback on this device在此设备上播放的音频功能. May be null if the
    *     default capabilities (no encoded audio passthrough support) should be assumed.
    * @param audioProcessorChain An {@link AudioProcessorChain} which is used to apply playback
    *     parameters adjustments. The instance passed in must not be reused in other sinks.
@@ -477,6 +483,7 @@ public final class DefaultAudioSink implements AudioSink {
       return SINK_FORMAT_SUPPORTED_DIRECTLY;
     }
     if (isPassthroughPlaybackSupported(format, audioCapabilities)) {
+      Logger.w(TAG,"getFormatSupport",Format.toLogString(format),audioCapabilities.toString(),"直通支持");
       return SINK_FORMAT_SUPPORTED_DIRECTLY;
     }
     return SINK_FORMAT_UNSUPPORTED;

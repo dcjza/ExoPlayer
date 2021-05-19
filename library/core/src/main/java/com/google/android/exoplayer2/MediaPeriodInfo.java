@@ -20,7 +20,7 @@ import com.google.android.exoplayer2.source.MediaPeriod;
 import com.google.android.exoplayer2.source.MediaSource.MediaPeriodId;
 import com.google.android.exoplayer2.util.Util;
 
-/** Stores the information required to load and play a {@link MediaPeriod}. */
+/** Stores the information required to load and play a {@link MediaPeriod}.存储加载和播放{@link MediaPeriod}所需的信息。 */
 /* package */ final class MediaPeriodInfo {
 
   /** The media period's identifier. */

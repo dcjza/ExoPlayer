@@ -19,7 +19,7 @@ import android.os.Handler;
 import android.os.Looper;
 import androidx.annotation.Nullable;
 
-/**
+/**一个接口，通过该接口可以读取系统时钟并创建{@link HandlerWrapper}。 {@link #DEFAULT}实现必须用于所有非测试用例。
  * An interface through which system clocks can be read and {@link HandlerWrapper}s created. The
  * {@link #DEFAULT} implementation must be used for all non-test cases.
  */

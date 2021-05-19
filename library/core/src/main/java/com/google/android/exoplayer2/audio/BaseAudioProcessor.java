@@ -23,6 +23,8 @@ import java.nio.ByteOrder;
  * Base class for audio processors that keep an output buffer and an internal buffer that is reused
  * whenever input is queued. Subclasses should override {@link #onConfigure(AudioFormat)} to return
  * the output audio format for the processor if it's active.
+ * 音频处理器的基类，其中保留输出缓冲区和内部缓冲区，只要输入排队，该缓冲区就可以重用。
+ * 子类应重写{@link #onConfigure（AudioFormat）}，以返回处理器处于活动状态时的输出音频格式。
  */
 public abstract class BaseAudioProcessor implements AudioProcessor {
 

@@ -23,6 +23,7 @@ import com.google.android.exoplayer2.util.Clock;
 import java.util.concurrent.TimeoutException;
 
 /**
+ * 定义可以与PlayerMessage.Sender发送并由PlayerMessage.Target接收的播放器消息。
  * Defines a player message which can be sent with a {@link Sender} and received by a {@link
  * Target}.
  */

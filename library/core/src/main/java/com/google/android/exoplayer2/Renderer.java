@@ -34,6 +34,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 /**
+ * 呈现从SampleStream读取的媒体。
+ * 在内部，渲染器的生命周期由拥有的ExoPlayer管理。
+ * 随着总体播放状态和启用的轨道发生变化，渲染器会通过各种状态进行转换。 有效状态转换如下所示，并标有每次转换期间调用的方法。
  * Renders media read from a {@link SampleStream}.
  *
  * <p>Internally, a renderer's lifecycle is managed by the owning {@link ExoPlayer}. The renderer is
@@ -215,6 +218,8 @@ public interface Renderer extends PlayerMessage.Target {
    * The renderer is disabled. A renderer in this state will not proactively acquire resources that
    * it requires for rendering (e.g., media decoders), but may continue to hold any that it already
    * has. {@link #reset()} can be called to force the renderer to release such resources.
+   * 渲染器被禁用。 处于此状态的渲染器将不会主动获取渲染所需的资源（例如媒体解码器），但可能会继续保留其已经拥有的资源。
+   * 可以调用{@link #reset（）}来强制渲染器释放此类资源。
    */
   int STATE_DISABLED = 0;
   /**
@@ -222,10 +227,13 @@ public interface Renderer extends PlayerMessage.Target {
    * current position (e.g. an initial video frame), but the position will not advance. A renderer
    * in this state will typically hold resources that it requires for rendering (e.g. media
    * decoders).
+   * 渲染器已启用但尚未启动。 在此状态下的渲染器可以在初始视频帧处渲染媒体，但位置不会前进。
+   * 处于此状态的渲染器通常会保存渲染所需的资源（例如媒体解码器）。
    */
   int STATE_ENABLED = 1;
   /**
    * The renderer is started. Calls to {@link #render(long, long)} will cause media to be rendered.
+   * 渲染器已启动。 调用{@link #render（long，long）}将导致呈现媒体。
    */
   int STATE_STARTED = 2;
 
@@ -413,29 +421,37 @@ public interface Renderer extends PlayerMessage.Target {
       throws ExoPlaybackException {}
 
   /**
+   * 增量渲染SampleStream。
    * Incrementally renders the {@link SampleStream}.
    *
    * <p>If the renderer is in the {@link #STATE_ENABLED} state then each call to this method will do
    * work toward being ready to render the {@link SampleStream} when the renderer is started. If the
    * renderer is in the {@link #STATE_STARTED} state then calls to this method will render the
    * {@link SampleStream} in sync with the specified media positions.
+   * 如果渲染器处于STATE_ENABLED状态，则在启动渲染器时，对此方法的每次调用都将为准备渲染SampleStream做准备。
+   * 如果渲染器处于STATE_STARTED状态，则对该方法的调用将渲染SampleStream与指定的媒体位置同步。
    *
    * <p>The renderer may also render the very start of the media at the current position (e.g. the
    * first frame of a video stream) while still in the {@link #STATE_ENABLED} state, unless it's the
    * initial start of the media after calling {@link #enable(RendererConfiguration, Format[],
    * SampleStream, long, boolean, boolean, long, long)} with {@code mayRenderStartOfStream} set to
    * {@code false}.
+   * 渲染器还可以在媒体仍处于STATE_ENABLED状态的情况下，在当前位置（例如视频流的第一帧）渲染媒体的最开始，
+   * 除非它是在调用enable（RendererConfiguration，Format []，
+   * 将mayRenderStartOfStream设置为false的SampleStream，long，boolean，boolean，long，long）。
    *
    * <p>This method should return quickly, and should not block if the renderer is unable to make
-   * useful progress.
+   * useful progress.此方法应快速返回，并且如果渲染器无法取得有用的进展，则不应阻塞。
    *
    * <p>This method may be called when the renderer is in the following states: {@link
    * #STATE_ENABLED}, {@link #STATE_STARTED}.
+   * 当渲染器处于以下状态时，可以调用此方法：STATE_ENABLED，STATE_STARTED。
    *
    * @param positionUs The current media time in microseconds, measured at the start of the current
-   *     iteration of the rendering loop.
+   *     iteration of the rendering loop.在渲染循环的当前迭代开始时测量的当前媒体时间（以微秒为单位）。
    * @param elapsedRealtimeUs {@link android.os.SystemClock#elapsedRealtime()} in microseconds,
    *     measured at the start of the current iteration of the rendering loop.
+   *     {@link android.os.SystemClock＃elapsedRealtime（）}（以微秒为单位），在渲染循环的当前迭代开始时进行测量。
    * @throws ExoPlaybackException If an error occurs.
    */
   void render(long positionUs, long elapsedRealtimeUs) throws ExoPlaybackException;

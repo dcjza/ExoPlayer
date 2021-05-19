@@ -20,7 +20,7 @@ import com.google.android.exoplayer2.PlaybackParameters;
 
 /**
  * A {@link MediaClock} whose position advances with real time based on the playback parameters when
- * started.
+ * started.一个{@link MediaClock}，其位置在启动时会根据播放参数实时地前进。
  */
 public final class StandaloneMediaClock implements MediaClock {
 

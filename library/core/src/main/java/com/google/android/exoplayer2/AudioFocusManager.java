@@ -151,6 +151,7 @@ import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 
   /**
    * Called by the player to abandon or request audio focus based on the desired player state.
+   * 播放器调用以根据所需播放器状态放弃或请求音频焦点。
    *
    * @param playWhenReady The desired value of playWhenReady.
    * @param playbackState The desired playback state.

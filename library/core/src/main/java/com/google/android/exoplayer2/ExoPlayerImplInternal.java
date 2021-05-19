@@ -53,6 +53,7 @@ import com.google.android.exoplayer2.util.TraceUtil;
 import com.google.android.exoplayer2.util.Util;
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableList;
+import dc.common.Logger;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -826,6 +827,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
     isRebuffering = false;
     mediaClock.start();
     for (Renderer renderer : renderers) {
+      Logger.w(TAG,renderer,"是否启用 "+isRendererEnabled(renderer));
       if (isRendererEnabled(renderer)) {
         renderer.start();
       }
@@ -856,6 +858,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
       resetRendererPosition(discontinuityPositionUs);
       // A MediaPeriod may report a discontinuity at the current playback position to ensure the
       // renderers are flushed. Only report the discontinuity externally if the position changed.
+      //MediaPeriod可能会报告当前播放位置的不连续性，以确保刷新渲染器。 如果位置发生变化，则仅在外部报告不连续性。
       if (discontinuityPositionUs != playbackInfo.positionUs) {
         playbackInfo =
             handlePositionDiscontinuity(
@@ -910,7 +913,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
   }
 
   private void doSomeWork() throws ExoPlaybackException, IOException {
-    long operationStartTimeMs = clock.uptimeMillis();
+    long operationStartTimeMs = clock.uptimeMillis();//返回自启动以来的毫秒数，不计算深度睡眠所花费的时间。
     updatePeriods();
 
     if (playbackInfo.playbackState == Player.STATE_IDLE
@@ -927,7 +930,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
       return;
     }
 
-    TraceUtil.beginSection("doSomeWork");
+    TraceUtil.beginSection("doSomeWork"); //开始了
 
     updatePlaybackPositions();
 
@@ -944,14 +947,18 @@ import java.util.concurrent.atomic.AtomicBoolean;
         }
         // TODO: Each renderer should return the maximum delay before which it wishes to be called
         // again. The minimum of these values should then be used as the delay before the next
-        // invocation of this method.
-        renderer.render(rendererPositionUs, rendererPositionElapsedRealtimeUs);
+        // invocation of this method.每个渲染器应该返回希望再次调用的最大延迟。 这些值中的最小值应用作下一次调用此方法之前的延迟。
+        renderer.render(rendererPositionUs, rendererPositionElapsedRealtimeUs); //看着就很核心
         renderersEnded = renderersEnded && renderer.isEnded();
         // Determine whether the renderer allows playback to continue. Playback can continue if the
         // renderer is ready or ended. Also continue playback if the renderer is reading ahead into
         // the next stream or is waiting for the next stream. This is to avoid getting stuck if
         // tracks in the current period have uneven durations and are still being read by another
         // renderer. See: https://github.com/google/ExoPlayer/issues/1874.
+        //确定渲染器是否允许继续播放。 如果渲染器准备就绪或结束，则播放可以继续。
+        // 如果渲染器正在向前阅读下一个流或正在等待下一个流，则还可以继续播放。
+        // 如果当前时间段中的轨道持续时间不均匀，并且仍被其他渲染器读取，则可以避免卡死。
+        // 请参阅：https：//github.com/google/ExoPlayer/issues/1874。
         boolean isReadingAhead = playingPeriodHolder.sampleStreams[i] != renderer.getStream();
         boolean isWaitingForNextStream = !isReadingAhead && renderer.hasReadStreamToEnd();
         boolean allowsPlayback =
@@ -981,18 +988,18 @@ import java.util.concurrent.atomic.AtomicBoolean;
     }
     if (finishedRendering && playingPeriodHolder.info.isFinal) {
       setState(Player.STATE_ENDED);
-      stopRenderers();
+      stopRenderers();//播放万恒，停止渲染器们
     } else if (playbackInfo.playbackState == Player.STATE_BUFFERING
         && shouldTransitionToReadyState(renderersAllowPlayback)) {
-      setState(Player.STATE_READY);
+      setState(Player.STATE_READY); //准备就绪
       pendingRecoverableError = null; // Any pending error was successfully recovered from.
       if (shouldPlayWhenReady()) {
-        startRenderers();
+        startRenderers(); //启动渲染器们
       }
     } else if (playbackInfo.playbackState == Player.STATE_READY
         && !(enabledRendererCount == 0 ? isTimelineReady() : renderersAllowPlayback)) {
       isRebuffering = shouldPlayWhenReady();
-      setState(Player.STATE_BUFFERING);
+      setState(Player.STATE_BUFFERING); //缓冲中
       if (isRebuffering) {
         notifyTrackSelectionRebuffer();
         livePlaybackSpeedControl.notifyRebuffer();

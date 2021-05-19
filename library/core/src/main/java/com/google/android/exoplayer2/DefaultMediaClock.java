@@ -23,7 +23,7 @@ import com.google.android.exoplayer2.util.StandaloneMediaClock;
 
 /**
  * Default {@link MediaClock} which uses a renderer media clock and falls back to a
- * {@link StandaloneMediaClock} if necessary.
+ * {@link StandaloneMediaClock} if necessary。默认的{@link MediaClock}使用渲染器媒体时钟，并在必要时退回到{@link StandaloneMediaClock}。
  */
 /* package */ final class DefaultMediaClock implements MediaClock {
 
@@ -61,7 +61,7 @@ import com.google.android.exoplayer2.util.StandaloneMediaClock;
   }
 
   /**
-   * Starts the standalone fallback clock.
+   * Starts the standalone fallback clock.启动独立的后备时钟。
    */
   public void start() {
     standaloneClockIsStarted = true;
