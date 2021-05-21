@@ -30,6 +30,7 @@ import androidx.annotation.VisibleForTesting;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.decoder.CryptoInfo;
 import com.google.common.base.Supplier;
+import dc.common.Logger;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -38,7 +39,8 @@ import java.nio.ByteBuffer;
 /**
  * A {@link MediaCodecAdapter} that operates the underlying {@link MediaCodec} in asynchronous mode,
  * routes {@link MediaCodec.Callback} callbacks on a dedicated thread that is managed internally,
- * and queues input buffers asynchronously.
+ * and queues input buffers asynchronously.一个MediaCodecAdapter，它以异步模式操作基础MediaCodec，
+ * 在内部管理的专用线程上路由MediaCodec.Callback回调，并异步对输入缓冲区进行排队。
  */
 @RequiresApi(23)
 /* package */ final class AsynchronousMediaCodecAdapter implements MediaCodecAdapter {
@@ -60,6 +62,13 @@ import java.nio.ByteBuffer;
 
     /**
      * Creates an factory for {@link AsynchronousMediaCodecAdapter} instances.
+     * 为AsynchronousMediaCodecAdapter实例创建一个工厂。
+     *
+     * 参数：
+     * trackType – C.TRACK_TYPE_AUDIO或C.TRACK_TYPE_VIDEO之一。 用于相应地标记内螺纹。
+     * forceQueueingSynchronizationWorkaround –默认情况下是启用队列同步解决方法还是仅对预定义设备启用队列同步解决方法。
+     * syncnizeCodecInteractionsWithQueueing –适配器是否应将MediaCodec交互与异步缓冲区队列同步。
+     *                        设置为true时，编解码器交互将等待，直到所有等待排队的输入缓冲区都将提交给MediaCodec。
      *
      * @param trackType One of {@link C#TRACK_TYPE_AUDIO} or {@link C#TRACK_TYPE_VIDEO}. Used for
      *     labelling the internal thread accordingly.
@@ -76,9 +85,9 @@ import java.nio.ByteBuffer;
         boolean synchronizeCodecInteractionsWithQueueing) {
       this(
           /* callbackThreadSupplier= */ () ->
-              new HandlerThread(createCallbackThreadLabel(trackType)),
+              new HandlerThread(createCallbackThreadLabel(trackType)),//ExoPlayer:MediaCodecAsyncAdapter:Video/Audio
           /* queueingThreadSupplier= */ () ->
-              new HandlerThread(createQueueingThreadLabel(trackType)),
+              new HandlerThread(createQueueingThreadLabel(trackType)),//ExoPlayer:MediaCodecQueueingThread:Video/Audio
           forceQueueingSynchronizationWorkaround,
           synchronizeCodecInteractionsWithQueueing);
     }
@@ -151,8 +160,9 @@ import java.nio.ByteBuffer;
 
   @Override
   public void start() {
+    Logger.w("AsynchronousMediaCodecAdapter.start ",bufferEnqueuer,codec,state);
     bufferEnqueuer.start();
-    codec.start();
+    codec.start(); //android sdk mediaCodec
     state = STATE_STARTED;
   }
 

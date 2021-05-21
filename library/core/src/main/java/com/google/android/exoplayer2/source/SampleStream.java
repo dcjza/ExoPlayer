@@ -61,6 +61,11 @@ public interface SampleStream {
    * C#RESULT_NOTHING_READ} is returned. Else if the format of the media is changing or if {@code
    * formatRequired} is set then {@code formatHolder} is populated and {@link C#RESULT_FORMAT_READ}
    * is returned. Else {@code buffer} is populated and {@link C#RESULT_BUFFER_READ} is returned.
+   * 尝试从流中读取。
+   * 如果流已结束，则在缓冲区上设置C.BUFFER_FLAG_END_OF_STREAM标志，并返回C.RESULT_BUFFER_READ。
+   * 否则，如果没有可用数据，则返回C.RESULT_NOTHING_READ。
+   * 否则，如果媒体的格式正在更改，或者如果设置了formatRequired，则填充formatHolder并返回C.RESULT_FORMAT_READ。
+   * 填充其他缓冲区，并返回C.RESULT_BUFFER_READ。
    *
    * @param formatHolder A {@link FormatHolder} to populate in the case of reading a format.
    * @param buffer A {@link DecoderInputBuffer} to populate in the case of reading a sample or the

@@ -27,6 +27,7 @@ import androidx.annotation.Nullable;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.util.Assertions;
 import com.google.android.exoplayer2.util.Util;
+import dc.common.Logger;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -42,6 +43,11 @@ import java.lang.reflect.Method;
  * #start()} immediately before calling {@link AudioTrack#play()}. Call {@link #pause()} when
  * pausing the track. Call {@link #handleEndOfStream(long)} when no more data will be written to the
  * track. When the audio track will no longer be used, call {@link #reset()}.
+ * 包裹一个AudioTrack，基于AudioTrack.getPlaybackHeadPosition（）和AudioTrack.getTimestamp（AudioTimestamp）公开一个位置。
+ * 调用setAudioTrack（AudioTrack，boolean，int，int，int）设置要包装的音轨。
+ *    如果有输入数据要写入轨道，则调用mayHandleBuffer（long）。 如果返回假，则表明音频轨道的位置稳定并且不能写入任何数据。
+ *    在调用AudioTrack.play（）之前立即调用start（）。 暂停曲目时，请调用pause（）。
+ *    当没有更多数据写入轨道时，请调用handleEndOfStream（long）。 当不再使用音轨时，请调用reset（）。
  */
 /* package */ final class AudioTrackPositionTracker {
 
@@ -204,6 +210,14 @@ import java.lang.reflect.Method;
   /**
    * Sets the {@link AudioTrack} to wrap. Subsequent method calls on this instance relate to this
    * track's position, until the next call to {@link #reset()}.
+   * 设置要环绕的AudioTrack。 在此实例上的后续方法调用与该轨道的位置有关，直到下一次对reset（）的调用为止。
+   *
+   * 参数：
+   * audioTrack –要包装的音频轨道。
+   * isPassthrough –是否使用直通模式。
+   * outputEncoding –音轨的编码。
+   * outputPcmFrameSize –对于PCM输出编码，为帧大小。 否则将忽略该值。
+   * bufferSize –音频轨道缓冲区的大小（以字节为单位）。
    *
    * @param audioTrack The audio track to wrap.
    * @param isPassthrough Whether passthrough mode is being used.
@@ -218,6 +232,7 @@ import java.lang.reflect.Method;
       @C.Encoding int outputEncoding,
       int outputPcmFrameSize,
       int bufferSize) {
+    Logger.w("AudioTrackPositionTracker.setAudiTrack",audioTrack,isPassthrough,outputEncoding,outputPcmFrameSize,bufferSize);
     this.audioTrack = audioTrack;
     this.outputPcmFrameSize = outputPcmFrameSize;
     this.bufferSize = bufferSize;

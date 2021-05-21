@@ -79,6 +79,8 @@ import org.checkerframework.checker.nullness.qual.EnsuresNonNullIf;
 import org.checkerframework.checker.nullness.qual.RequiresNonNull;
 
 /**
+ * {@link Player}媒体播放的高级视图。 它在播放期间显示视频，字幕和专辑封面，并使用{@link StyledPlayerControlView}显示播放控件。
+ *   <p>可以通过设置属性（或调用相应的方法），覆盖可绘制对象，覆盖视图的布局文件或指定自定义视图布局文件来自定义StyledPlayerView。
  * A high level view for {@link Player} media playbacks. It displays video, subtitles and album art
  * during playback, and displays playback controls using a {@link StyledPlayerControlView}.
  *
@@ -553,6 +555,14 @@ public class StyledPlayerView extends FrameLayout implements AdsLoader.AdViewPro
 
   /**
    * Set the {@link Player} to use.
+   * 设置播放器使用。
+   * 要将Player从一个视图定位到另一个视图，建议使用switchTargetView（Player，StyledPlayerView，StyledPlayerView）而不是此方法。
+   * 如果您确实希望直接使用此方法，请确保在调用setPlayer（null）将播放器与旧视图分离之前，将播放器附加到新视图。
+   * 此排序效率显着提高，并且可以实现更无缝的过渡。
+   *
+   * 参数：
+   * player –要使用的播放器，或者为null以分离当前播放器。
+   * 仅支持在主线程上访问的播放器（player.getApplicationLooper（）== Looper.getMainLooper（））。
    *
    * <p>To transition a {@link Player} from targeting one view to another, it's recommended to use
    * {@link #switchTargetView(Player, StyledPlayerView, StyledPlayerView)} rather than this method.

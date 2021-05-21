@@ -312,6 +312,14 @@ public interface AudioSink {
 
   /**
    * Configures (or reconfigures) the sink.
+   * 配置（或重新配置）接收器。
+   *
+   * 参数：
+   * inputFormat –输入缓冲区中提供的音频数据的格式。
+   * 指定缓冲区大小–回放缓冲区的特定大小（以字节为单位），或0表示合适的缓冲区大小。
+   * outputChannels –从输入到输出通道的映射，如果处理PCM输入，则作为预处理步骤应用于此接收器的输入。
+   *        指定null可使输入保持不变。 否则，索引i处的元素指定在预处理输入缓冲区时映射到输出通道i的输入通道的索引。
+   *        应用映射后，音频数据将具有outputChannels.length通道。
    *
    * @param inputFormat The format of audio data provided in the input buffers.
    * @param specifiedBufferSize A specific size for the playback buffer in bytes, or 0 to infer a
@@ -339,6 +347,10 @@ public interface AudioSink {
    * ending at its limit (exclusive). The position of the {@link ByteBuffer} is advanced by the
    * number of bytes that were handled. {@link Listener#onPositionDiscontinuity()} will be called if
    * {@code presentationTimeUs} is discontinuous with the last buffer handled since the last reset.
+   * 尝试处理ByteBuffer的数据，从其当前位置开始，直到其限制（不包括限制）。
+   *    ByteBuffer的位置提前处理的字节数。 如果presentationTimeUs与自上次重置以来处理的最后一个缓冲区不连续，则将调用AudioSink.Listener.onPositionDiscontinuity（）。
+   * 返回数据是否已全部处理。 如果未对数据进行完整处理，则必须将相同的ByteBuffer提供给后续调用，直到完全消耗完为止，
+   *    除非是对flush（）（或configure（Format，int，int []）的中间调用） 导致水槽被冲洗）。
    *
    * <p>Returns whether the data was handled in full. If the data was not handled in full then the
    * same {@link ByteBuffer} must be provided to subsequent calls until it has been fully consumed,

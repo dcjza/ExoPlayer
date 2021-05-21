@@ -54,6 +54,7 @@ import com.google.android.exoplayer2.util.Log;
 import com.google.android.exoplayer2.util.MediaClock;
 import com.google.android.exoplayer2.util.MimeTypes;
 import com.google.android.exoplayer2.util.Util;
+import dc.common.Logger;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -96,7 +97,7 @@ public class MediaCodecAudioRenderer extends MediaCodecRenderer implements Media
 
   private int codecMaxInputSize;
   private boolean codecNeedsDiscardChannelsWorkaround;
-  /** Codec used for DRM decryption only in passthrough and offload. */
+  /** Codec used for DRM decryption only in passthrough and offload.仅在直通和卸载中用于DRM解密的编解码器。 */
   @Nullable private Format decryptOnlyCodecFormat;
 
   private long currentPositionUs;
@@ -430,22 +431,22 @@ public class MediaCodecAudioRenderer extends MediaCodecRenderer implements Media
       throws ExoPlaybackException {
     Format audioSinkInputFormat;
     @Nullable int[] channelMap = null;
-    if (decryptOnlyCodecFormat != null) { // Direct playback with a codec for decryption.
+    if (decryptOnlyCodecFormat != null) { // Direct playback with a codec for decryption.使用编解码器直接播放以解密。//仅在直通和分载中用于DRM解密的编解码器。
       audioSinkInputFormat = decryptOnlyCodecFormat;
-    } else if (getCodec() == null) { // Direct playback with codec bypass.
+    } else if (getCodec() == null) { // Direct playback with codec bypass.使用编解码器旁路直接播放。
       audioSinkInputFormat = format;
     } else {
       @C.PcmEncoding int pcmEncoding;
-      if (MimeTypes.AUDIO_RAW.equals(format.sampleMimeType)) {
+      if (MimeTypes.AUDIO_RAW.equals(format.sampleMimeType)) {  //audio/raw
         // For PCM streams, the encoder passes through int samples despite set to float mode.
         pcmEncoding = format.pcmEncoding;
-      } else if (Util.SDK_INT >= 24 && mediaFormat.containsKey(MediaFormat.KEY_PCM_ENCODING)) {
+      } else if (Util.SDK_INT >= 24 && mediaFormat.containsKey(MediaFormat.KEY_PCM_ENCODING)) { //pcm-encoding
         pcmEncoding = mediaFormat.getInteger(MediaFormat.KEY_PCM_ENCODING);
-      } else if (mediaFormat.containsKey(VIVO_BITS_PER_SAMPLE_KEY)) {
+      } else if (mediaFormat.containsKey(VIVO_BITS_PER_SAMPLE_KEY)) { //v-bits-per-sample
         pcmEncoding = Util.getPcmEncoding(mediaFormat.getInteger(VIVO_BITS_PER_SAMPLE_KEY));
       } else {
         // If the format is anything other than PCM then we assume that the audio decoder will
-        // output 16-bit PCM.
+        // output 16-bit PCM.如果格式不是PCM，则我们假设音频解码器将输出16位PCM。
         pcmEncoding =
             MimeTypes.AUDIO_RAW.equals(format.sampleMimeType)
                 ? format.pcmEncoding
@@ -470,6 +471,7 @@ public class MediaCodecAudioRenderer extends MediaCodecRenderer implements Media
       }
     }
     try {
+      Logger.w(TAG,"onOutputFormatChanged",audioSinkInputFormat,channelMap,format,decryptOnlyCodecFormat,mediaFormat);//Format(2, null, null, audio/ac3, null, -1, en, [-1, -1, -1.0], [6, 48000])，=format
       audioSink.configure(audioSinkInputFormat, /* specifiedBufferSize= */ 0, channelMap);
     } catch (AudioSink.ConfigurationException e) {
       throw createRendererException(e, e.format);
@@ -627,7 +629,7 @@ public class MediaCodecAudioRenderer extends MediaCodecRenderer implements Media
       return true;
     }
 
-    boolean fullyConsumed;
+    boolean fullyConsumed;//完全消耗
     try {
       fullyConsumed = audioSink.handleBuffer(buffer, bufferPresentationTimeUs, sampleCount);
     } catch (InitializationException e) {

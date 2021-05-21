@@ -168,4 +168,14 @@ public final class AudioAttributes {
     return result;
   }
 
+  @Override
+  public String toString() {
+    return "AudioAttributes{" +
+        "contentType=" + contentType +
+        ", flags=" + flags +
+        ", usage=" + usage +
+        ", allowedCapturePolicy=" + allowedCapturePolicy +
+        ", audioAttributesV21=" + audioAttributesV21 +
+        '}';
+  }
 }

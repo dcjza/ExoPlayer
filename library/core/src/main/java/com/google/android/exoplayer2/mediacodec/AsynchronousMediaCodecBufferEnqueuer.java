@@ -41,6 +41,8 @@ import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
  *
  * <p>The implementation of this class assumes that its public methods will be called from the same
  * thread.
+ * 在后台线程上执行MediaCodec输入缓冲区排队。
+ * 此类的实现假定将从同一线程调用其公共方法。
  */
 @RequiresApi(23)
 class AsynchronousMediaCodecBufferEnqueuer {

@@ -26,7 +26,7 @@ import com.google.common.collect.ImmutableList;
 import java.util.List;
 
 /**
- * Information about an ongoing playback.
+ * Information about an ongoing playback.有关正在进行的播放的信息。
  */
 /* package */ final class PlaybackInfo {
 

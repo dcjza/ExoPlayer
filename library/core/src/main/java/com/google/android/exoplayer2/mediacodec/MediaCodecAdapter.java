@@ -30,6 +30,8 @@ import java.nio.ByteBuffer;
 
 /**
  * Abstracts {@link MediaCodec} operations.
+ * 摘要MediaCodec操作。
+ * MediaCodecAdapter提供了与MediaCodec交互的通用接口，而与MediaCodec的运行模式无关。
  *
  * <p>{@code MediaCodecAdapter} offers a common interface to interact with a {@link MediaCodec}
  * regardless of the mode the {@link MediaCodec} is operating in.
@@ -88,6 +90,9 @@ public interface MediaCodecAdapter {
    * MediaCodec#INFO_OUTPUT_FORMAT_CHANGED} and you should call {@link #getOutputFormat()} to get
    * the format. If there is no available output, this method will return {@link
    * MediaCodec#INFO_TRY_AGAIN_LATER}.
+   * 从基础MediaCodec返回下一个可用的输出缓冲区索引。
+   * 如果下一个可用的输出是MediaFormat更改，它将返回MediaCodec.INFO_OUTPUT_FORMAT_CHANGED，并且您应该调用getOutputFormat（）以获取格式。
+   * 如果没有可用的输出，则此方法将返回MediaCodec.INFO_TRY_AGAIN_LATER。
    *
    * @throws IllegalStateException If the underlying {@link MediaCodec} raised an error.
    */
@@ -111,6 +116,7 @@ public interface MediaCodecAdapter {
 
   /**
    * Returns a read-only ByteBuffer for a dequeued output buffer index.
+   * 返回出列输出缓冲区索引的只读ByteBuffer。
    *
    * @see MediaCodec#getOutputBuffer(int)
    */
@@ -145,7 +151,8 @@ public interface MediaCodecAdapter {
    * Returns the buffer to the {@link MediaCodec}. If the {@link MediaCodec} was configured with an
    * output surface, setting {@code render} to {@code true} will first send the buffer to the output
    * surface. The surface will release the buffer back to the codec once it is no longer
-   * used/displayed.
+   * used/displayed.将缓冲区返回给MediaCodec。
+   * 如果MediaCodec配置了输出表面，则将render设置为true会首先将缓冲区发送到输出表面。 一旦不再使用/显示，则表面会将缓冲区释放回编解码器。
    *
    * @see MediaCodec#releaseOutputBuffer(int, boolean)
    */
@@ -155,6 +162,8 @@ public interface MediaCodecAdapter {
    * Updates the output buffer's surface timestamp and sends it to the {@link MediaCodec} to render
    * it on the output surface. If the {@link MediaCodec} is not configured with an output surface,
    * this call will simply return the buffer to the {@link MediaCodec}.
+   * 更新输出缓冲区的表面时间戳，并将其发送到MediaCodec，以将其呈现在输出surface上。
+   * 如果没有为MediaCodec配置输出surface，则此调用将简单地将缓冲区返回给MediaCodec。
    *
    * @see MediaCodec#releaseOutputBuffer(int, long)
    */

@@ -80,11 +80,12 @@ import java.util.Locale;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
- * A view for controlling {@link Player} instances.
+ * A view for controlling {@link Player} instances.用于控制{@link Player}实例的视图。
  *
  * <p>A StyledPlayerControlView can be customized by setting attributes (or calling corresponding
  * methods), overriding drawables, overriding the view's layout file, or by specifying a custom view
- * layout file.
+ * layout file.可以通过设置属性（或调用相应的方法），覆盖可绘制对象，
+ * 覆盖视图的布局文件或指定自定义视图布局文件来自定义StyledPlayerControlView。
  *
  * <h3>Attributes</h3>
  *

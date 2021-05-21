@@ -47,6 +47,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
+ * 连接多个MediaSource。 可以在播放期间修改MediaSource的列表。 同一MediaSource实例在播放列表中多次出现是有效的。
+ * 除构造函数外，所有方法均在播放线程上调用。
  * Concatenates multiple {@link MediaSource}s. The list of {@link MediaSource}s can be modified
  * during playback. It is valid for the same {@link MediaSource} instance to be present more than
  * once in the playlist.
@@ -278,7 +280,7 @@ import java.util.Set;
     return createTimeline();
   }
 
-  /** Prepares the playlist. */
+  /** Prepares the playlist准备播放列表. */
   public void prepare(@Nullable TransferListener mediaTransferListener) {
     Assertions.checkState(!isPrepared);
     this.mediaTransferListener = mediaTransferListener;
@@ -466,7 +468,7 @@ import java.util.Set;
     return PlaylistTimeline.getConcatenatedUid(holder.uid, childPeriodUid);
   }
 
-  /** Data class to hold playlist media sources together with meta data needed to process them. */
+  /** Data class to hold playlist media sources together with meta data needed to process them.数据类，用于保存播放列表媒体源以及处理它们所需的元数据 */
   /* package */ static final class MediaSourceHolder implements MediaSourceInfoHolder {
 
     public final MaskingMediaSource mediaSource;

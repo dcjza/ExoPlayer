@@ -585,31 +585,31 @@
     "samples": [
       {
         "name": "4K Istanbul",
-        "uri": "http://172.19.60.150/res/4K Istanbul City.webm"
+        "uri": "http://192.168.66.245/res/4K Istanbul City.webm"
       },
       {
         "name": "4K 三星",
-        "uri": "http://172.19.60.150/res/DEMO SAMSUNG 4K HDR 60 FPS 2019.mkv"
+        "uri": "http://192.168.66.245/res/DEMO SAMSUNG 4K HDR 60 FPS 2019.mkv"
       },
       {
         "name": "6声道 flac",
-        "uri": "http://172.19.60.150/res/【专用音源】如果你是我的传说_6声道.flac"
+        "uri": "http://192.168.66.245/res/【专用音源】如果你是我的传说_6声道.flac"
       },
       {
-        "name": "ac3 5.1",
+        "name": "ac3 5.1 192.168.8.155",
         "uri": "http://192.168.8.155/res/ac3-5.1_6声道.mkv"
       },
       {
-        "name": "ac3 5.1",
-        "uri": "http://192.168.66.201/res/ac3-5.1_6声道.mkv"
+        "name": "ac3 5.1 192.168.66.245",
+        "uri": "http://192.168.66.245/res/ac3-5.1_6声道.mkv"
       },
       {
-        "name": "ac3 5.1 172.19.60.188 audio配置为auto没有环境会崩",
+        "name": "ac3 5.1 172.19.60.188",
         "uri": "http://172.19.60.188/res/ac3-5.1_6声道.mkv"
       },
       {
         "name": "dolby atoms 8声道",
-        "uri": "http://172.19.60.150/res/Dolby_Leaf_Lossless_ATMOS_8声道.mkv"
+        "uri": "http://192.168.66.245/res/Dolby_Leaf_Lossless_ATMOS_8声道.mkv"
       },
       {
         "name": "dts 5.1",
@@ -617,15 +617,15 @@
       },
       {
         "name": "lpcm 5.1",
-        "uri": "http://172.19.60.150/res/lpcm5.1_6声道.mkv"
+        "uri": "http://192.168.66.245/res/lpcm5.1_6声道.mkv"
       },
       {
         "name": "4K  AAC",
-        "uri": "http://172.19.60.150/res/4K6声道AAC复合片段.mov"
+        "uri": "http://192.168.66.245/res/4K6声道AAC复合片段.mov"
       },
       {
         "name": "4K AC 3 不支持",
-        "uri": "http://192.168.66.201/res/独立日.加长版.Independence.Day.1996.EXTENDED.2160p.H265.10Bits.AC3.5.1-乐之音.mkv"
+        "uri": "http://192.168.66.245/res/独立日.加长版.Independence.Day.1996.EXTENDED.2160p.H265.10Bits.AC3.5.1-乐之音.mkv"
       },
       {
         "name": "rtmp",

@@ -78,7 +78,7 @@ public interface AdsLoader {
     default void onAdTapped() {}
   }
 
-  /** Provides information about views for the ad playback UI. */
+  /** Provides information about views for the ad playback UI提供有关广告播放界面的视图的信息. */
   interface AdViewProvider {
 
     /**

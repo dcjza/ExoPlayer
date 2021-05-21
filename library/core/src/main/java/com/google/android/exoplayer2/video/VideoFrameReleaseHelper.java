@@ -307,6 +307,7 @@ public final class VideoFrameReleaseHelper {
    * Updates the media frame rate that's used to calculate the playback frame rate of the current
    * {@link #surface}. If the frame rate is updated then {@link #updateSurfacePlaybackFrameRate} is
    * called to update the surface.
+   * 更新用于计算当前表面的播放帧速率的媒体帧速率。 如果更新了帧速率，则将调用updateSurfacePlaybackFrameRate来更新曲面。
    */
   private void updateSurfaceMediaFrameRate() {
     if (Util.SDK_INT < 30 || surface == null) {
@@ -349,6 +350,7 @@ public final class VideoFrameReleaseHelper {
   /**
    * Updates the playback frame rate of the current {@link #surface} based on the playback speed,
    * frame rate of the content, and whether the renderer is started.
+   * 根据回放速度，内容的帧速率以及渲染器是否启动，更新当前表面的回放帧速率。
    *
    * @param isNewSurface Whether the current {@link #surface} is new.
    */

@@ -511,7 +511,7 @@ public final class DefaultAudioSink implements AudioSink {
     int outputChannelConfig;
     int outputPcmFrameSize;
 
-    Logger.w(TAG,"configure方法",inputFormat.toString(),specifiedBufferSize,outputChannels);
+    Logger.w(TAG,"configure方法",inputFormat.toString(),specifiedBufferSize,outputChannels);//Format(2, null, null, audio/ac3, null, -1, en, [-1, -1, -1.0], [6, 48000]),0,null
 
     if (MimeTypes.AUDIO_RAW.equals(inputFormat.sampleMimeType)) {
       Assertions.checkArgument(Util.isEncodingLinearPcm(inputFormat.pcmEncoding));
@@ -559,7 +559,7 @@ public final class DefaultAudioSink implements AudioSink {
       availableAudioProcessors = new AudioProcessor[0];
       outputSampleRate = inputFormat.sampleRate;
       outputPcmFrameSize = C.LENGTH_UNSET;
-      Logger.w(TAG,"configure方法x2",enableOffload,isOffloadedPlaybackSupported(inputFormat, audioAttributes));
+      Logger.w(TAG,"configure方法x2",enableOffload,isOffloadedPlaybackSupported(inputFormat, audioAttributes));//false,false
       if (enableOffload && isOffloadedPlaybackSupported(inputFormat, audioAttributes)) {
         outputMode = OUTPUT_MODE_OFFLOAD;
         outputEncoding =
@@ -567,17 +567,17 @@ public final class DefaultAudioSink implements AudioSink {
                 Assertions.checkNotNull(inputFormat.sampleMimeType), inputFormat.codecs);
         outputChannelConfig = Util.getAudioTrackChannelConfig(inputFormat.channelCount);
       } else {
-        outputMode = OUTPUT_MODE_PASSTHROUGH;
+        outputMode = OUTPUT_MODE_PASSTHROUGH;//直通输出
         @Nullable
         Pair<Integer, Integer> encodingAndChannelConfig =
             getEncodingAndChannelConfigForPassthrough(inputFormat, audioCapabilities);
-        Logger.w("pass though x2",encodingAndChannelConfig);;
+        Logger.w("pass though x2",encodingAndChannelConfig);//Pair{5 252}
         if (encodingAndChannelConfig == null) {
           throw new ConfigurationException(
               "Unable to configure passthrough for: " + inputFormat, inputFormat);
         }
-        outputEncoding = encodingAndChannelConfig.first;
-        outputChannelConfig = encodingAndChannelConfig.second;
+        outputEncoding = encodingAndChannelConfig.first;//5
+        outputChannelConfig = encodingAndChannelConfig.second;//252
       }
     }
 
@@ -640,7 +640,8 @@ public final class DefaultAudioSink implements AudioSink {
     // released. This guarantees that we cannot end up in a state where we have multiple audio
     // track instances. Without this guarantee it would be possible, in extreme cases, to exhaust
     // the shared memory that's available for audio track buffers. This would in turn cause the
-    // initialization of the audio track to fail.
+    // initialization of the audio track to fail.如果我们异步释放先前的音轨，则我们将阻止它直到其被释放为止。
+    // 这保证了我们不会最终陷入拥有多个音轨实例的状态。 没有这种保证，在极端情况下，可能会耗尽可用于音轨缓冲区的共享内存。 这继而将导致音频轨道的初始化失败。
     releasingConditionVariable.block();
 
     audioTrack = buildAudioTrack();
@@ -656,7 +657,7 @@ public final class DefaultAudioSink implements AudioSink {
         configuration.outputEncoding,
         configuration.outputPcmFrameSize,
         configuration.bufferSize);
-    setVolumeInternal();
+    setVolumeInternal();//音量
 
     if (auxEffectInfo.effectId != AuxEffectInfo.NO_AUX_EFFECT_ID) {
       audioTrack.attachAuxEffect(auxEffectInfo.effectId);
@@ -716,7 +717,7 @@ public final class DefaultAudioSink implements AudioSink {
 
     if (!isAudioTrackInitialized()) {
       try {
-        initializeAudioTrack();
+        initializeAudioTrack(); //初始化 audioTrack
       } catch (InitializationException e) {
         if (e.isRecoverable) {
           throw e; // Do not delay the exception if it can be recovered at higher level.
@@ -738,7 +739,7 @@ public final class DefaultAudioSink implements AudioSink {
       applyAudioProcessorPlaybackParametersAndSkipSilence(presentationTimeUs);
 
       if (playing) {
-        play();
+        play();//audioTrack开始播放
       }
     }
 
@@ -818,7 +819,7 @@ public final class DefaultAudioSink implements AudioSink {
       inputBufferAccessUnitCount = encodedAccessUnitCount;
     }
 
-    processBuffers(presentationTimeUs);
+    processBuffers(presentationTimeUs);//调用02篇的build时创建的音频处理器处理
 
     if (!inputBuffer.hasRemaining()) {
       inputBuffer = null;
@@ -837,7 +838,7 @@ public final class DefaultAudioSink implements AudioSink {
 
   private AudioTrack buildAudioTrack() throws InitializationException {
     try {
-      return Assertions.checkNotNull(configuration)
+      return Assertions.checkNotNull(configuration)//拿config了
           .buildAudioTrack(tunneling, audioAttributes, audioSessionId);
     } catch (InitializationException e) {
       maybeDisableOffload();
@@ -861,6 +862,7 @@ public final class DefaultAudioSink implements AudioSink {
   private void processBuffers(long avSyncPresentationTimeUs) throws WriteException {
     int count = activeAudioProcessors.length;
     int index = count;
+    Logger.w(TAG,"processBuffers",avSyncPresentationTimeUs,count);//0,0 | 32000,0 | 64000，0|96000，0
     while (index >= 0) {
       ByteBuffer input = index > 0 ? outputBuffers[index - 1]
           : (inputBuffer != null ? inputBuffer : AudioProcessor.EMPTY_BUFFER);
@@ -1961,6 +1963,11 @@ public final class DefaultAudioSink implements AudioSink {
         int specifiedBufferSize,
         boolean enableAudioTrackPlaybackParams,
         AudioProcessor[] availableAudioProcessors) {
+      //Format(2, null, null, audio/ac3, null, -1, en, [-1, -1, -1.0], [6, 48000]),-1,2,-1,48000,252,5,0,false,[Lcom.google.android.exoplayer2.audio.AudioProcessor;@bccb2c3  - ac3 5.1测试
+      //Format(null, null, null, audio/raw, null, -1, null, [-1, -1, -1.0], [2, 44100]),4,0,4,44100,12,2,0,false,[Lcom.google.android.exoplayer2.audio.AudioProcessor;@b3cbfbe - 4k Istanbul VP9 + Vorbis
+      //Format(2, null, null, audio/raw, null, -1, en, [-1, -1, -1.0], [6, 96000]),18,0,12,96000,252,2,0,false,[Lcom.google.android.exoplayer2.audio.AudioProcessor;@d6c9e53 - lpcm 5.1
+      //：Format(null, null, null, audio/raw, null, -1, null, [-1, -1, -1.0], [6, 48000]),12,0,12,48000,252,2,0,false,[Lcom.google.android.exoplayer2.audio.AudioProcessor;@636559d - aac
+      Logger.w(TAG,"Configuration构造",inputFormat,inputPcmFrameSize,outputMode,outputPcmFrameSize,outputSampleRate,outputChannelConfig,outputEncoding,specifiedBufferSize,enableAudioTrackPlaybackParams,availableAudioProcessors);
       this.inputFormat = inputFormat;
       this.inputPcmFrameSize = inputPcmFrameSize;
       this.outputMode = outputMode;
@@ -1970,7 +1977,7 @@ public final class DefaultAudioSink implements AudioSink {
       this.outputEncoding = outputEncoding;
       this.availableAudioProcessors = availableAudioProcessors;
 
-      // Call computeBufferSize() last as it depends on the other configuration values.
+      // Call computeBufferSize() last as it 取决于其他配置值depends on the other configuration values.
       this.bufferSize = computeBufferSize(specifiedBufferSize, enableAudioTrackPlaybackParams);
     }
 
@@ -2063,6 +2070,8 @@ public final class DefaultAudioSink implements AudioSink {
     @RequiresApi(21)
     private AudioTrack createAudioTrackV21(
         boolean tunneling, AudioAttributes audioAttributes, int audioSessionId) {
+      //false,AudioAttributes{contentType=0, flags=0, usage=1, allowedCapturePolicy=1, audioAttributesV21=null},241,48000,252,5,40000
+      Logger.w(TAG,"createAudioTrackV21",tunneling,audioAttributes,audioSessionId,outputSampleRate,outputChannelConfig,outputEncoding,bufferSize);
       return new AudioTrack(
           getAudioTrackAttributesV21(audioAttributes, tunneling),
           getAudioFormat(outputSampleRate, outputChannelConfig, outputEncoding),

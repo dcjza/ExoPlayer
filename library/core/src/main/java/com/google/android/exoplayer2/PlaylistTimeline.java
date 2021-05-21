@@ -22,7 +22,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
-/** Timeline exposing concatenated timelines of playlist media sources. */
+/** Timeline exposing concatenated timelines of playlist media sources.时间线公开了播放列表媒体源的级联时间线。 */
 /* package */ final class PlaylistTimeline extends AbstractConcatenatedTimeline {
 
   private final int windowCount;

@@ -217,6 +217,7 @@ public class DecoderInputBuffer extends Buffer {
 
   /**
    * Flips {@link #data} and {@link #supplementalData} in preparation for being queued to a decoder.
+   * 翻转data和supplementalData以准备排队到解码器。
    *
    * @see java.nio.Buffer#flip()
    */

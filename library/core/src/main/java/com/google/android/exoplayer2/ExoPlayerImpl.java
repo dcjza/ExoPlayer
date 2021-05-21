@@ -328,6 +328,8 @@ import java.util.List;
     // listeners to ensure that new operations issued in the listener notifications reach the
     // player after this prepare. The internal player can't change the playback info immediately
     // because it uses a callback.
+    // 在更新播放信息之前，先触发内部准备，然后通知外部侦听器，以确保在此准备之后，
+    // 侦听器通知中发出的新操作会到达播放器。 内部播放器无法立即更改播放信息，因为它使用了回调
     pendingOperationAcks++;
     internalPlayer.prepare();
     updatePlaybackInfo(

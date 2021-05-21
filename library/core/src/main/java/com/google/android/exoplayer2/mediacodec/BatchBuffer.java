@@ -85,6 +85,7 @@ import java.nio.ByteBuffer;
 
   /**
    * Attempts to append the provided buffer.
+   * 尝试附加提供的缓冲区。
    *
    * @param buffer The buffer to try and append.
    * @return Whether the buffer was successfully appended.

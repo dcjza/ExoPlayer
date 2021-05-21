@@ -64,6 +64,7 @@ import com.google.android.exoplayer2.util.NalUnitUtil;
 import com.google.android.exoplayer2.util.TimedValueQueue;
 import com.google.android.exoplayer2.util.TraceUtil;
 import com.google.android.exoplayer2.util.Util;
+import dc.common.Logger;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -75,6 +76,7 @@ import java.util.List;
 
 /**
  * An abstract renderer that uses {@link MediaCodec} to decode samples for rendering.
+ * 使用{@link MediaCodec}解码要渲染的样本的抽象渲染器。
  */
 public abstract class MediaCodecRenderer extends BaseRenderer {
 
@@ -539,6 +541,7 @@ public abstract class MediaCodecRenderer extends BaseRenderer {
     setCodecDrmSession(sourceDrmSession);
 
     String mimeType = inputFormat.sampleMimeType;
+    Logger.w(TAG,"maybeInitCodecOrBypass",mimeType,codecDrmSession);//video/avc,null
     if (codecDrmSession != null) {
       if (mediaCrypto == null) {
         @Nullable
@@ -793,9 +796,11 @@ public abstract class MediaCodecRenderer extends BaseRenderer {
 
   @Override
   public void render(long positionUs, long elapsedRealtimeUs) throws ExoPlaybackException {
+    Logger.w(TAG,positionUs,elapsedRealtimeUs);//0,32253533000 | 0，32255136000 | 146675,32255311000
     if (pendingOutputEndOfStream) {
+      Logger.w(TAG,"流结束信号 "+codecDrainAction);
       pendingOutputEndOfStream = false;
-      processEndOfStream();
+      processEndOfStream(); //处理流结束信号。
     }
     if (pendingPlaybackException != null) {
       ExoPlaybackException playbackException = pendingPlaybackException;
@@ -805,32 +810,33 @@ public abstract class MediaCodecRenderer extends BaseRenderer {
 
     try {
       if (outputStreamEnded) {
-        renderToEndOfStream();
+        renderToEndOfStream();//增量渲染任何剩余的输出-无操作
         return;
       }
       if (inputFormat == null && !readToFlagsOnlyBuffer(/* requireFormat= */ true)) {
-        // We still don't have a format and can't make progress without one.
+        // We still don't have a format and can't make progress without one.我们仍然没有格式，没有格式也无法取得进展。
         return;
       }
       // We have a format.
-      maybeInitCodecOrBypass();
+      maybeInitCodecOrBypass();//初始化解码器或直通
       if (bypassEnabled) {
         TraceUtil.beginSection("bypassRender");
-        while (bypassRender(positionUs, elapsedRealtimeUs)) {}
+        while (bypassRender(positionUs, elapsedRealtimeUs)) {}//这个是音频直通吧
         TraceUtil.endSection();
       } else if (codec != null) {
         long renderStartTimeMs = SystemClock.elapsedRealtime();
-        TraceUtil.beginSection("drainAndFeed");
+        TraceUtil.beginSection("drainAndFeed"); //生产与消费
         while (drainOutputBuffer(positionUs, elapsedRealtimeUs)
-            && shouldContinueRendering(renderStartTimeMs)) {}
-        while (feedInputBuffer() && shouldContinueRendering(renderStartTimeMs)) {}
+            && shouldContinueRendering(renderStartTimeMs)) {} //消耗解码数据
+        while (feedInputBuffer() && shouldContinueRendering(renderStartTimeMs)) {}//填充源数据
         TraceUtil.endSection();
       } else {
         decoderCounters.skippedInputBufferCount += skipSource(positionUs);
         // We need to read any format changes despite not having a codec so that drmSession can be
         // updated, and so that we have the most recent format should the codec be initialized. We
         // may also reach the end of the stream. Note that readSource will not read a sample into a
-        // flags-only buffer.
+        // flags-only buffer.尽管没有编解码器，我们仍需要读取任何格式更改，以便可以更新drmSession，
+        // 以便在初始化编解码器时拥有最新的格式。 我们也可能到达流程的尽头。 请注意，readSource不会将样本读取到仅标志缓冲区中。
         readToFlagsOnlyBuffer(/* requireFormat= */ false);
       }
       decoderCounters.ensureUpdated();
@@ -978,6 +984,7 @@ public abstract class MediaCodecRenderer extends BaseRenderer {
       try {
         List<MediaCodecInfo> allAvailableCodecInfos =
             getAvailableCodecInfos(mediaCryptoRequiresSecureDecoder);
+        Logger.w(TAG,"maybeInitCodecWithFallback allAvailableCodecInfos ",allAvailableCodecInfos);//[OMX.hisi.video.decoder.avc, OMX.google.h264.decoder]
         availableCodecInfos = new ArrayDeque<>();
         if (enableDecoderFallback) {
           availableCodecInfos.addAll(allAvailableCodecInfos);
@@ -1004,6 +1011,7 @@ public abstract class MediaCodecRenderer extends BaseRenderer {
 
     while (codec == null) {
       MediaCodecInfo codecInfo = availableCodecInfos.peekFirst();
+      Logger.w(TAG,"maybeInitCodecWithFallback codecInfo ",codecInfo);//OMX.hisi.video.decoder.avc
       if (!shouldInitCodec(codecInfo)) {
         return;
       }
@@ -1060,7 +1068,8 @@ public abstract class MediaCodecRenderer extends BaseRenderer {
   /**
    * Configures rendering where no codec is used. Called instead of {@link
    * #configureCodec(MediaCodecInfo, MediaCodecAdapter, Format, MediaCrypto, float)} when no codec
-   * is used to render.
+   * is used to render.在不使用编解码器的情况下配置渲染。 当不使用编解码器呈现时，
+   * 调用而不是configureCodec（MediaCodecInfo，MediaCodecAdapter，Format，MediaCrypto，float）。
    */
   private void initBypass(Format format) {
     disableBypass(); // In case of transition between 2 bypass formats.
@@ -1091,6 +1100,8 @@ public abstract class MediaCodecRenderer extends BaseRenderer {
       codecOperatingRate = CODEC_OPERATING_RATE_UNSET;
     }
 
+    Logger.w(TAG,"initCodec",codecInfo,crypto);//OMX.hisi.video.decoder.avc,null
+
     try {
       codecInitializingTimestamp = SystemClock.elapsedRealtime();
       TraceUtil.beginSection("createCodec:" + codecName);
@@ -1106,10 +1117,10 @@ public abstract class MediaCodecRenderer extends BaseRenderer {
         codecAdapter = codecAdapterFactory.createAdapter(codec);
       }
       TraceUtil.endSection();
-      TraceUtil.beginSection("configureCodec");
+      TraceUtil.beginSection("configureCodec 找到了解码器");
       configureCodec(codecInfo, codecAdapter, inputFormat, crypto, codecOperatingRate);
       TraceUtil.endSection();
-      TraceUtil.beginSection("startCodec");
+      TraceUtil.beginSection("startCodec 启动解码器");
       codecAdapter.start();
       TraceUtil.endSection();
       codecInitializedTimestamp = SystemClock.elapsedRealtime();
@@ -1179,7 +1190,7 @@ public abstract class MediaCodecRenderer extends BaseRenderer {
   }
 
   /**
-   * @return Whether it may be possible to feed more input data.
+   * @return Whether it may be possible to feed more input data.是否有可能提供更多的输入数据。
    * @throws ExoPlaybackException If an error occurs feeding the input buffer.
    */
   private boolean feedInputBuffer() throws ExoPlaybackException {
@@ -1253,7 +1264,7 @@ public abstract class MediaCodecRenderer extends BaseRenderer {
       return true;
     }
 
-    // We've read a buffer.
+    // We've read a buffer.读取到了buffer
     if (buffer.isEndOfStream()) {
       if (codecReconfigurationState == RECONFIGURATION_STATE_QUEUE_PENDING) {
         // We received a new format immediately before the end of the stream. We need to clear
@@ -1757,7 +1768,7 @@ public abstract class MediaCodecRenderer extends BaseRenderer {
   }
 
   /**
-   * @return Whether it may be possible to drain more output data.
+   * @return Whether it may be possible to drain more output data.是否有可能消耗更多的输出数据。
    * @throws ExoPlaybackException If an error occurs draining the output buffer.
    */
   private boolean drainOutputBuffer(long positionUs, long elapsedRealtimeUs)
@@ -1805,10 +1816,11 @@ public abstract class MediaCodecRenderer extends BaseRenderer {
       }
 
       this.outputIndex = outputIndex;
-      outputBuffer = codec.getOutputBuffer(outputIndex);
+      outputBuffer = codec.getOutputBuffer(outputIndex); //返回出列输出缓冲区索引的只读ByteBuffer。
 
       // The dequeued buffer is a media buffer. Do some initial setup.
       // It will be processed by calling processOutputBuffer (possibly multiple times).
+      // 出队缓冲区是媒体缓冲区。 做一些初始设置。 将通过调用processOutputBuffer（可能多次）进行处理。
       if (outputBuffer != null) {
         outputBuffer.position(outputBufferInfo.offset);
         outputBuffer.limit(outputBufferInfo.offset + outputBufferInfo.size);
@@ -1899,6 +1911,11 @@ public abstract class MediaCodecRenderer extends BaseRenderer {
 
   /**
    * Processes an output media buffer.
+   * 处理输出媒体缓冲区。
+   * 当将新的ByteBuffer传递给此方法时，其位置和限制描述了要处理的数据。
+   * 返回值指示缓冲区是否已满。 如果返回true，则对该方法的下一次调用将接收要处理的新缓冲区。 如果返回false，则将相同的缓冲区传递给下一个调用。
+   * 此方法的实现可以自由修改缓冲区，并且可以假定在连续调用之间不会从外部修改缓冲区。 因此，实现可以例如修改缓冲区的位置，以跟踪其已处理的数据量。
+   * 请注意，在调用onPositionReset（long，boolean）之后，对此方法的第一次调用将始终接收要处理的新ByteBuffer。
    *
    * <p>When a new {@link ByteBuffer} is passed to this method its position and limit delineate the
    * data to be processed. The return value indicates whether the buffer was processed in full. If
@@ -1948,9 +1965,9 @@ public abstract class MediaCodecRenderer extends BaseRenderer {
       throws ExoPlaybackException;
 
   /**
-   * Incrementally renders any remaining output.
+   * Incrementally renders any remaining output.增量渲染任何剩余的输出。
    * <p>
-   * The default implementation is a no-op.
+   * The default implementation is a no-op无操作.
    *
    * @throws ExoPlaybackException Thrown if an error occurs rendering remaining output.
    */
@@ -1996,6 +2013,8 @@ public abstract class MediaCodecRenderer extends BaseRenderer {
    * Returns the offset that should be subtracted from {@code bufferPresentationTimeUs} in {@link
    * #processOutputBuffer(long, long, MediaCodecAdapter, ByteBuffer, int, int, int, long, boolean,
    * boolean, Format)} to get the playback position with respect to the media.
+   * 返回应从processOutputBuffer中的bufferPresentationTimeUs中减去的偏移量
+   * （长，长，MediaCodecAdapter，字节缓冲区，整数，整数，整数，长整数，布尔值，布尔值，格式），以获取相对于媒体的播放位置。
    */
   protected final long getOutputStreamOffsetUs() {
     return outputStreamOffsetUs;
@@ -2138,6 +2157,14 @@ public abstract class MediaCodecRenderer extends BaseRenderer {
    * Processes any pending batch of buffers without using a decoder, and drains a new batch of
    * buffers from the source.
    *
+   * 在不使用解码器的情况下处理任何待处理的缓冲区批处理，并从源中排出新一批的缓冲区。
+   *
+   * 参数：
+   * positionUs –当前媒体时间（以微秒为单位），在渲染循环的当前迭代开始时测量。
+   * elapsedRealtimeUs – SystemClock.elapsedRealtime（），以微秒为单位，在渲染循环的当前迭代开始时进行测量。
+   * 返回值：
+   * 是否立即再次调用此方法将取得更大的进展。
+   *
    * @param positionUs The current media time in microseconds, measured at the start of the current
    *     iteration of the rendering loop.
    * @param elapsedRealtimeUs {@link SystemClock#elapsedRealtime()} in microseconds, measured at the
@@ -2149,7 +2176,7 @@ public abstract class MediaCodecRenderer extends BaseRenderer {
   private boolean bypassRender(long positionUs, long elapsedRealtimeUs)
       throws ExoPlaybackException {
 
-    // Process any batched data.
+    // Process any batched data分批处理数据.
     checkState(!outputStreamEnded);
     if (bypassBatchBuffer.hasSamples()) {
       if (processOutputBuffer(
@@ -2232,12 +2259,12 @@ public abstract class MediaCodecRenderer extends BaseRenderer {
             return;
           }
           if (waitingForFirstSampleInFormat) {
-            // This is the first buffer in a new format, the output format must be updated.
+            // This is the first buffer in a new format, the output format must be updated.这是新格式的第一个缓冲区，必须更新输出格式。
             outputFormat = checkNotNull(inputFormat);
             onOutputFormatChanged(outputFormat, /* mediaFormat= */ null);
             waitingForFirstSampleInFormat = false;
           }
-          // Try to append the buffer to the batch buffer.
+          // Try to append the buffer to the batch buffer.尝试将缓冲区追加到批处理缓冲区。
           bypassSampleBuffer.flip();
           if (!bypassBatchBuffer.append(bypassSampleBuffer)) {
             bypassSampleBufferPending = true;

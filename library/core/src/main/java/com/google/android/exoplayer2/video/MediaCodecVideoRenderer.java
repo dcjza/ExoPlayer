@@ -86,6 +86,11 @@ import java.util.List;
  *       metadata associated with frames being rendered. The message payload should be the {@link
  *       VideoFrameMetadataListener}, or null.
  * </ul>
+ * 使用MediaCodec解码和渲染视频。
+ * 该渲染器接受通过回放线程上的ExoPlayer.createMessage（com.google.android.exoplayer2.PlayerMessage.Target）发送的以下消息：
+ * 类型为MSG_SET_SURFACE的消息，用于设置输出表面。 消息有效负载应为目标Surface，或者为null。
+ * 类型为MSG_SET_SCALING_MODE的消息，用于设置视频缩放模式。 消息有效负载应为C.VideoScalingMode中的整数缩放模式之一。 请注意，缩放模式仅在此渲染器定位的Surface属于android.view.SurfaceView的情况下适用。
+ * 类型为MSG_SET_VIDEO_FRAME_METADATA_LISTENER的消息，用于设置与正在渲染的帧关联的元数据的侦听器。 消息有效负载应为VideoFrameMetadataListener或为null。
  */
 public class MediaCodecVideoRenderer extends MediaCodecRenderer {
 
@@ -808,18 +813,18 @@ public class MediaCodecVideoRenderer extends MediaCodecRenderer {
       boolean isLastBuffer,
       Format format)
       throws ExoPlaybackException {
-    Assertions.checkNotNull(codec); // Can not render video without codec
+    Assertions.checkNotNull(codec); // Can not render video without codec没有编解码器就无法渲染视频
 
-    if (initialPositionUs == C.TIME_UNSET) {
+    if (initialPositionUs == C.TIME_UNSET) {  //表示未设置或未知的时间或持续时间的特殊常数。 适用于任何时基。
       initialPositionUs = positionUs;
     }
 
     if (bufferPresentationTimeUs != lastBufferPresentationTimeUs) {
-      frameReleaseHelper.onNextFrame(bufferPresentationTimeUs);
+      frameReleaseHelper.onNextFrame(bufferPresentationTimeUs);//在跳过，拖放或渲染帧之前，渲染器为每个帧调用。
       this.lastBufferPresentationTimeUs = bufferPresentationTimeUs;
     }
 
-    long outputStreamOffsetUs = getOutputStreamOffsetUs();
+    long outputStreamOffsetUs = getOutputStreamOffsetUs();//获取相对于媒体的播放位置
     long presentationTimeUs = bufferPresentationTimeUs - outputStreamOffsetUs;
 
     if (isDecodeOnlyBuffer && !isLastBuffer) {
@@ -903,8 +908,8 @@ public class MediaCodecVideoRenderer extends MediaCodecRenderer {
     if (Util.SDK_INT >= 21) {
       // Let the underlying framework time the release.
       if (earlyUs < 50000) {
-        notifyFrameMetadataListener(presentationTimeUs, adjustedReleaseTimeNs, format);
-        renderOutputBufferV21(codec, bufferIndex, presentationTimeUs, adjustedReleaseTimeNs);
+        notifyFrameMetadataListener(presentationTimeUs, adjustedReleaseTimeNs, format);//通知监听
+        renderOutputBufferV21(codec, bufferIndex, presentationTimeUs, adjustedReleaseTimeNs);//使用指定的索引渲染输出缓冲区
         updateVideoFrameProcessingOffsetCounters(earlyUs);
         return true;
       }
@@ -1092,6 +1097,7 @@ public class MediaCodecVideoRenderer extends MediaCodecRenderer {
 
   /**
    * Updates local counters and {@link DecoderCounters} with a new video frame processing offset.
+   * 使用新的视频帧处理偏移量更新本地计数器和{@link DecoderCounters}。
    *
    * @param processingOffsetUs The video frame processing offset.
    */
@@ -1123,7 +1129,13 @@ public class MediaCodecVideoRenderer extends MediaCodecRenderer {
   /**
    * Renders the output buffer with the specified index. This method is only called if the platform
    * API version of the device is 21 or later.
+   * 使用指定的索引渲染输出缓冲区。 仅当设备的平台API版本为21或更高版本时，才调用此方法。
    *
+   * 参数：
+   * 编解码器–拥有输出缓冲区的编解码器。
+   * index –要删除的输出缓冲区的索引。
+   * presentationTimeUs –输出缓冲区的显示时间，以微秒为单位。
+   * releaseTimeNs –应显示帧的墙上时钟时间（以纳秒为单位）。
    * @param codec The codec that owns the output buffer.
    * @param index The index of the output buffer to drop.
    * @param presentationTimeUs The presentation time of the output buffer, in microseconds.

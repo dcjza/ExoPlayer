@@ -26,6 +26,7 @@ import java.io.IOException;
 
 /**
  * An abstract base class suitable for most {@link Renderer} implementations.
+ * 适用于大多数{@link Renderer}实现的抽象基类。
  */
 public abstract class BaseRenderer implements Renderer, RendererCapabilities {
 
@@ -374,6 +375,8 @@ public abstract class BaseRenderer implements Renderer, RendererCapabilities {
    * Reads from the enabled upstream source. If the upstream source has been read to the end then
    * {@link C#RESULT_BUFFER_READ} is only returned if {@link #setCurrentStreamFinal()} has been
    * called. {@link C#RESULT_NOTHING_READ} is returned otherwise.
+   * 从启用的上游源中读取。 如果上游源已读到末尾，则仅在调用setCurrentStreamFinal（）的情况下才返回C.RESULT_BUFFER_READ。 否则返回C.RESULT_NOTHING_READ。
+   * 当渲染器处于以下状态时，可以调用此方法：STATE_ENABLED，STATE_STARTED。
    *
    * <p>This method may be called when the renderer is in the following states: {@link
    * #STATE_ENABLED}, {@link #STATE_STARTED}.
