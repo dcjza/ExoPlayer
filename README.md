@@ -133,3 +133,15 @@ implementation project(':exoplayer-library-ui')
 
 To develop ExoPlayer using Android Studio, simply open the ExoPlayer project in
 the root directory of the repository.
+
+## IDEA
+新版本中的问题：
+
+如果所有库，都在当前导入项目的根目录下，不管在几级目录中，build后 就会 以模块形式展现；
+
+如果有部分库，不在当前导入项目的根目录下，build后，以链接形式展现；
+![idea缺心眼的设计](docs/截屏2021-05-24%20下午5.58.14.png)
+
+旧版本中的表现：
+
+不管在哪个目录，均以配置的模块形式展现。

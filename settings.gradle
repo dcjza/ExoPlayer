@@ -11,13 +11,15 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-gradle.ext.exoplayerRoot = settingsDir
+println("setting里 " +"  === "+settingsDir)
+//gradle.ext.exoplayerRoot = settingsDir
+gradle.ext.exoplayerRoot = "/Users/senrsl/temp/ExoPlayer"
 
 def modulePrefix = ':'
 if (gradle.ext.has('exoplayerModulePrefix')) {
     modulePrefix += gradle.ext.exoplayerModulePrefix
 }
-
+println("项目前缀："+modulePrefix)
 include modulePrefix + 'demo'
 include modulePrefix + 'demo-cast'
 include modulePrefix + 'demo-gl'
