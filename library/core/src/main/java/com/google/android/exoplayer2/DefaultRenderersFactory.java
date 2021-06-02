@@ -28,6 +28,8 @@ import com.google.android.exoplayer2.audio.AudioSink;
 import com.google.android.exoplayer2.audio.DefaultAudioSink;
 import com.google.android.exoplayer2.audio.DefaultAudioSink.DefaultAudioProcessorChain;
 import com.google.android.exoplayer2.audio.MediaCodecAudioRenderer;
+import com.google.android.exoplayer2.audio.TeeAudioProcessor;
+import com.google.android.exoplayer2.audio.TeeWavFileSink;
 import com.google.android.exoplayer2.mediacodec.MediaCodecSelector;
 import com.google.android.exoplayer2.metadata.MetadataOutput;
 import com.google.android.exoplayer2.metadata.MetadataRenderer;
@@ -638,11 +640,17 @@ public class DefaultRenderersFactory implements RenderersFactory {
       boolean enableFloatOutput,
       boolean enableAudioTrackPlaybackParams,
       boolean enableOffload) {
-    return new DefaultAudioSink(
+    DefaultAudioSink.AudioProcessorChain chain =  new DefaultAudioProcessorChain(
+       new TeeAudioProcessor(new TeeAudioProcessor.WavFileAudioBufferSink("/mnt/sdcard/SENRSL/dc"))
+    );
+
+    AudioSink audioSink = new DefaultAudioSink(
         AudioCapabilities.getCapabilities(context),
-        new DefaultAudioProcessorChain(),
+        chain,
         enableFloatOutput,
         enableAudioTrackPlaybackParams,
         enableOffload);
+
+    return audioSink;
   }
 }

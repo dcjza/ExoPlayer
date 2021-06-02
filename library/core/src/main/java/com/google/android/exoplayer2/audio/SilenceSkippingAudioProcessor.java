@@ -58,11 +58,11 @@ public final class SilenceSkippingAudioProcessor extends BaseAudioProcessor {
     STATE_SILENT,
   })
   private @interface State {}
-  /** State when the input is not silent. */
+  /** State when the input is not silent 非静音时. */
   private static final int STATE_NOISY = 0;
-  /** State when the input may be silent but we haven't read enough yet to know. */
+  /** State when the input may be silent but we haven't read enough yet to know说明何时输入可能是无声的，但我们还没有阅读足够的内容. */
   private static final int STATE_MAYBE_SILENT = 1;
-  /** State when the input is silent. */
+  /** State when the input is silent输入静音时的状态. */
   private static final int STATE_SILENT = 2;
 
   private final long minimumSilenceDurationUs;
@@ -218,6 +218,7 @@ public final class SilenceSkippingAudioProcessor extends BaseAudioProcessor {
   /**
    * Incrementally processes new input from {@code inputBuffer} while in {@link #STATE_NOISY},
    * updating the state if needed.
+   * 在 STATE_NOISY 中增量处理来自 inputBuffer 的新输入，如果需要更新状态。
    */
   private void processNoisy(ByteBuffer inputBuffer) {
     int limit = inputBuffer.limit();

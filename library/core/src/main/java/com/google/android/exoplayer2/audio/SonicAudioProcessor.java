@@ -257,4 +257,24 @@ public final class SonicAudioProcessor implements AudioProcessor {
     inputEnded = false;
   }
 
+  @Override
+  public String toString() {
+    return "SonicAudioProcessor{" +
+        "pendingOutputSampleRate=" + pendingOutputSampleRate +
+        ", speed=" + speed +
+        ", pitch=" + pitch +
+        ", pendingInputAudioFormat=" + pendingInputAudioFormat +
+        ", pendingOutputAudioFormat=" + pendingOutputAudioFormat +
+        ", inputAudioFormat=" + inputAudioFormat +
+        ", outputAudioFormat=" + outputAudioFormat +
+        ", pendingSonicRecreation=" + pendingSonicRecreation +
+        ", sonic=" + sonic +
+        ", buffer=" + buffer +
+        ", shortBuffer=" + shortBuffer +
+        ", outputBuffer=" + outputBuffer +
+        ", inputBytes=" + inputBytes +
+        ", outputBytes=" + outputBytes +
+        ", inputEnded=" + inputEnded +
+        '}';
+  }
 }

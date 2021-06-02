@@ -23,6 +23,7 @@ import java.nio.ByteBuffer;
 /**
  * An {@link AudioProcessor} that converts high resolution PCM audio to 32-bit float. The following
  * encodings are supported as input:
+ * {@link AudioProcessor}，可将高分辨率PCM音频转换为32位浮点型。 支持以下编码作为输入：
  *
  * <ul>
  *   <li>{@link C#ENCODING_PCM_24BIT}

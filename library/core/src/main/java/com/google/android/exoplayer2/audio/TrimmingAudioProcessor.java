@@ -21,7 +21,7 @@ import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.util.Util;
 import java.nio.ByteBuffer;
 
-/** Audio processor for trimming samples from the start/end of data. */
+/** Audio processor for trimming samples from the start/end of data音频处理器，用于从数据的开始/结束处修剪样本. */
 /* package */ final class TrimmingAudioProcessor extends BaseAudioProcessor {
 
   @C.PcmEncoding private static final int OUTPUT_ENCODING = C.ENCODING_PCM_16BIT;
@@ -35,7 +35,7 @@ import java.nio.ByteBuffer;
   private int endBufferSize;
   private long trimmedFrameCount;
 
-  /** Creates a new audio processor for trimming samples from the start/end of data. */
+  /** Creates a new audio processor for trimming修剪 samples from the start/end of data. */
   public TrimmingAudioProcessor() {
     endBuffer = Util.EMPTY_BYTE_ARRAY;
   }
@@ -44,6 +44,11 @@ import java.nio.ByteBuffer;
    * Sets the number of audio frames to trim from the start and end of audio passed to this
    * processor. After calling this method, call {@link #configure(AudioFormat)} to apply the new
    * trimming frame counts.
+   * 设置要从传递给此处理器的音频的开头和结尾修剪的音频帧数。 调用此方法后，调用 configure(AudioProcessor.AudioFormat) 以应用新的修剪帧计数。
+   *
+   * 参数：
+   * trimStartFrames – 从音频开始要修剪的音频帧数。
+   * trimEndFrames – 要从音频末尾修剪的音频帧数。
    *
    * @param trimStartFrames The number of audio frames to trim from the start of audio.
    * @param trimEndFrames The number of audio frames to trim from the end of audio.
@@ -54,7 +59,7 @@ import java.nio.ByteBuffer;
     this.trimEndFrames = trimEndFrames;
   }
 
-  /** Sets the trimmed frame count returned by {@link #getTrimmedFrameCount()} to zero. */
+  /** Sets the trimmed frame count returned by {@link #getTrimmedFrameCount()} to zero. 重置修剪 */
   public void resetTrimmedFrameCount() {
     trimmedFrameCount = 0;
   }
@@ -88,7 +93,7 @@ import java.nio.ByteBuffer;
     }
 
     // Trim any pending start bytes from the input buffer.
-    int trimBytes = min(remaining, pendingTrimStartBytes);
+    int trimBytes = min(remaining, pendingTrimStartBytes);//取小
     trimmedFrameCount += trimBytes / inputAudioFormat.bytesPerFrame;
     pendingTrimStartBytes -= trimBytes;
     inputBuffer.position(position + trimBytes);
@@ -101,7 +106,8 @@ import java.nio.ByteBuffer;
     // endBuffer must be kept as full as possible, so that we trim the right amount of media if we
     // don't receive any more input. After taking into account the number of bytes needed to keep
     // endBuffer as full as possible, the output should be any surplus bytes currently in endBuffer
-    // followed by any surplus bytes in the new inputBuffer.
+    // followed by any surplus bytes in the new inputBuffer.endBuffer 必须尽可能地保持满，这样如果我们不再接收到任何输入，
+    // 我们就可以修剪适量的媒体。 考虑到保持 endBuffer 尽可能满所需的字节数后，输出应该是当前 endBuffer 中的任何剩余字节，然后是新 inputBuffer 中的任何剩余字节。
     int remainingBytesToOutput = endBufferSize + remaining - endBuffer.length;
     ByteBuffer buffer = replaceOutputBuffer(remainingBytesToOutput);
 

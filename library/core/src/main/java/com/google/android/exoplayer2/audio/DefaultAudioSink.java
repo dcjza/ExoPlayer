@@ -183,6 +183,7 @@ public final class DefaultAudioSink implements AudioSink {
       this.sonicAudioProcessor = sonicAudioProcessor;
       this.audioProcessors[audioProcessors.length] = silenceSkippingAudioProcessor;
       this.audioProcessors[audioProcessors.length + 1] = sonicAudioProcessor;
+      Logger.w(TAG,"音频处理 Chain",audioProcessors,audioProcessors.length,silenceSkippingAudioProcessor,sonicAudioProcessor);
     }
 
     @Override
@@ -428,6 +429,7 @@ public final class DefaultAudioSink implements AudioSink {
     Collections.addAll(toIntPcmAudioProcessors, audioProcessorChain.getAudioProcessors());
     toIntPcmAvailableAudioProcessors = toIntPcmAudioProcessors.toArray(new AudioProcessor[0]);
     toFloatPcmAvailableAudioProcessors = new AudioProcessor[] {new FloatResamplingAudioProcessor()};
+    Logger.w(TAG,toIntPcmAvailableAudioProcessors.length,toFloatPcmAvailableAudioProcessors.length);//6,1
     volume = 1f;
     audioAttributes = AudioAttributes.DEFAULT;
     audioSessionId = C.AUDIO_SESSION_ID_UNSET;
@@ -525,12 +527,24 @@ public final class DefaultAudioSink implements AudioSink {
       trimmingAudioProcessor.setTrimFrameCount(
           inputFormat.encoderDelay, inputFormat.encoderPadding);
 
+      Logger.w(TAG,"音频解码 声道处理",Format.toLogString(inputFormat),outputChannels);
       if (Util.SDK_INT < 21 && inputFormat.channelCount == 8 && outputChannels == null) {
         // AudioTrack doesn't support 8 channel output before Android L. Discard the last two (side)
         // channels to give a 6 channel stream that is supported.
+        //android 5以下不支持8声道，所以改成6声道
         outputChannels = new int[6];
         for (int i = 0; i < outputChannels.length; i++) {
           outputChannels[i] = i;
+        }
+      }else if(inputFormat.channelCount == 2 && outputChannels == null){
+        outputChannels = new int[6];
+        for (int i = 0; i < outputChannels.length; i++) {
+          outputChannels[i] = i % 2 == 0 ? 0 : 1;
+        }
+      }else if(inputFormat.channelCount == 1 && outputChannels == null){
+        outputChannels = new int[6];
+        for (int i = 0; i < outputChannels.length; i++) {
+          outputChannels[i] = 0;
         }
       }
       channelMappingAudioProcessor.setChannelMap(outputChannels);
@@ -543,6 +557,7 @@ public final class DefaultAudioSink implements AudioSink {
           AudioProcessor.AudioFormat nextFormat = audioProcessor.configure(outputFormat);
           if (audioProcessor.isActive()) {
             outputFormat = nextFormat;
+            Logger.w(TAG,"configure",outputFormat);
           }
         } catch (UnhandledAudioFormatException e) {
           throw new ConfigurationException(e, inputFormat);
@@ -864,16 +879,15 @@ public final class DefaultAudioSink implements AudioSink {
     int index = count;
     Logger.w(TAG,"processBuffers",avSyncPresentationTimeUs,count);//0,0 | 32000,0 | 64000，0|96000，0
     while (index >= 0) {
-      ByteBuffer input = index > 0 ? outputBuffers[index - 1]
-          : (inputBuffer != null ? inputBuffer : AudioProcessor.EMPTY_BUFFER);
+      ByteBuffer input = index > 0 ? outputBuffers[index - 1] : (inputBuffer != null ? inputBuffer : AudioProcessor.EMPTY_BUFFER);
       if (index == count) {
         writeBuffer(input, avSyncPresentationTimeUs);
       } else {
         AudioProcessor audioProcessor = activeAudioProcessors[index];
         if (index > drainingAudioProcessorIndex) {
-          audioProcessor.queueInput(input);
+          audioProcessor.queueInput(input); //输入
         }
-        ByteBuffer output = audioProcessor.getOutput();
+        ByteBuffer output = audioProcessor.getOutput();//输出
         outputBuffers[index] = output;
         if (output.hasRemaining()) {
           // Handle the output as input to the next audio processor or the AudioTrack.

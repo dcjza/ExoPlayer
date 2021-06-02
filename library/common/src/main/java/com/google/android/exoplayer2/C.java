@@ -191,7 +191,8 @@ public final class C {
   public @interface Encoding {}
 
   /**
-   * Represents a PCM audio encoding, or an invalid or unset value. One of {@link Format#NO_VALUE},
+   * Represents a PCM audio encoding, or an invalid or unset value.
+   * 表示PCM音频编码，或无效或未设置的值。One of {@link Format#NO_VALUE},
    * {@link #ENCODING_INVALID}, {@link #ENCODING_PCM_8BIT}, {@link #ENCODING_PCM_16BIT}, {@link
    * #ENCODING_PCM_16BIT_BIG_ENDIAN}, {@link #ENCODING_PCM_24BIT}, {@link #ENCODING_PCM_32BIT},
    * {@link #ENCODING_PCM_FLOAT}.

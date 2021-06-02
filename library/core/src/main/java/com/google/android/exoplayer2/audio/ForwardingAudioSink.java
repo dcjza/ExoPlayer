@@ -20,7 +20,7 @@ import com.google.android.exoplayer2.Format;
 import com.google.android.exoplayer2.PlaybackParameters;
 import java.nio.ByteBuffer;
 
-/** An overridable {@link AudioSink} implementation forwarding all methods to another sink. */
+/** An overridable {@link AudioSink} implementation forwarding all methods to another sink.可重写的{@link AudioSink}实现将所有方法转发到另一个接收器。 */
 public class ForwardingAudioSink implements AudioSink {
 
   private final AudioSink sink;

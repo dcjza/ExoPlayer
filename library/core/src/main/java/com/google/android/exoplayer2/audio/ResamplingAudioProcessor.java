@@ -23,6 +23,7 @@ import java.nio.ByteBuffer;
 /**
  * An {@link AudioProcessor} that converts different PCM audio encodings to 16-bit integer PCM. The
  * following encodings are supported as input:
+ * 将不同的PCM音频编码转换为16位整数PCM的AudioProcessor。 支持以下编码作为输入：
  *
  * <ul>
  *   <li>{@link C#ENCODING_PCM_8BIT}

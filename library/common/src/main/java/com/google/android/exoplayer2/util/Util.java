@@ -1677,6 +1677,7 @@ public final class Util {
 
   /**
    * Returns the frame size for audio with {@code channelCount} channels in the specified encoding.
+   * 以指定的编码返回具有{@code channelCount}个通道的音频的帧大小。
    *
    * @param pcmEncoding The encoding of the audio data.
    * @param channelCount The channel count.

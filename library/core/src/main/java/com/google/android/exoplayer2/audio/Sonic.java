@@ -23,7 +23,7 @@ import java.nio.ShortBuffer;
 import java.util.Arrays;
 
 /**
- * Sonic audio stream processor for time/pitch stretching.
+ * Sonic audio stream processor for time/pitch stretching.音速音频流处理器，用于时间/音高拉伸
  * <p>
  * Based on https://github.com/waywardgeek/sonic.
  */

@@ -16,6 +16,8 @@
 package com.google.android.exoplayer2.audio;
 
 import androidx.annotation.CallSuper;
+import dc.common.Logger;
+
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
@@ -46,6 +48,7 @@ public abstract class BaseAudioProcessor implements AudioProcessor {
     pendingOutputAudioFormat = AudioFormat.NOT_SET;
     inputAudioFormat = AudioFormat.NOT_SET;
     outputAudioFormat = AudioFormat.NOT_SET;
+    Logger.w("BaseAudioProcessor 音频处理",buffer,outputBuffer,pendingInputAudioFormat,pendingOutputAudioFormat,outputAudioFormat);
   }
 
   @Override
@@ -141,5 +144,18 @@ public abstract class BaseAudioProcessor implements AudioProcessor {
   /** Called when the processor is reset. */
   protected void onReset() {
     // Do nothing.
+  }
+
+  @Override
+  public String toString() {
+    return "BaseAudioProcessor{" +
+        "inputAudioFormat=" + inputAudioFormat +
+        ", outputAudioFormat=" + outputAudioFormat +
+        ", pendingInputAudioFormat=" + pendingInputAudioFormat +
+        ", pendingOutputAudioFormat=" + pendingOutputAudioFormat +
+        ", buffer=" + buffer +
+        ", outputBuffer=" + outputBuffer +
+        ", inputEnded=" + inputEnded +
+        '}';
   }
 }

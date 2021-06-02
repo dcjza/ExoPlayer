@@ -24,9 +24,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
+import android.media.projection.MediaProjectionManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.JsonReader;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -127,6 +129,9 @@ public class SampleChooserActivity extends AppCompatActivity
     } catch (IllegalStateException e) {
       DownloadService.startForeground(this, DemoDownloadService.class);
     }
+
+    //new Handler().postDelayed(()->TestAudioFxActivity.start(this),3000);
+
   }
 
   @Override
@@ -589,4 +594,86 @@ public class SampleChooserActivity extends AppCompatActivity
       this.playlists = new ArrayList<>();
     }
   }
+
+
+  void doCapture(){
+    //MediaProjectionManager.
+  }
+
+//  AudioRecord mRecorder;
+//  Handler mHandler = new Handler();
+//  int mMinBufferSize = AudioRecord.getMinBufferSize(RECORD_SAMPLING_RATE,
+//      AudioFormat.CHANNEL_IN_MONO,
+//      AudioFormat.ENCODING_PCM_16BIT);;
+//  static final int RECORD_SAMPLING_RATE = 48000;
+//  public void doCapture() {
+//    mRecorder = new AudioRecord(MediaRecorder.AudioSource.DEFAULT, RECORD_SAMPLING_RATE,
+//        AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, mMinBufferSize * 10);
+//    AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+//
+//    ArrayList<AudioPort> audioPorts = new ArrayList<AudioPort>();
+//    am.listAudioPorts(audioPorts);
+//    AudioPortConfig srcPortConfig = null;
+//    AudioPortConfig sinkPortConfig = null;
+//    for (AudioPort audioPort : audioPorts) {
+//      if (srcPortConfig == null
+//          && audioPort.role() == AudioPort.ROLE_SOURCE
+//          && audioPort instanceof AudioDevicePort) {
+//        AudioDevicePort audioDevicePort = (AudioDevicePort) audioPort;
+//        if (audioDevicePort.type() == AudioManager.DEVICE_IN_LOOPBACK) {
+//          srcPortConfig = audioPort.buildConfig(48000, AudioFormat.CHANNEL_IN_DEFAULT,
+//              AudioFormat.ENCODING_DEFAULT, null);
+//          Log.d(LOG_TAG, "Found loopback audio source port : " + audioPort);
+//        }
+//      }
+//      else if (sinkPortConfig == null
+//          && audioPort.role() == AudioPort.ROLE_SINK
+//          && audioPort instanceof AudioMixPort) {
+//        sinkPortConfig = audioPort.buildConfig(48000, AudioFormat.CHANNEL_OUT_DEFAULT,
+//            AudioFormat.ENCODING_DEFAULT, null);
+//        Log.d(LOG_TAG, "Found recorder audio mix port : " + audioPort);
+//      }
+//    }
+//    if (srcPortConfig != null && sinkPortConfig != null) {
+//      AudioPatch[] patches = new AudioPatch[] { null };
+//      int status = am.createAudioPatch(
+//          patches,
+//          new AudioPortConfig[] { srcPortConfig },
+//          new AudioPortConfig[] { sinkPortConfig });
+//      Log.d(LOG_TAG, "Result of createAudioPatch(): " + status);
+//    }
+//    mRecorder.startRecording();
+//    processAudioData();
+//    mRecorder.stop();
+//    mRecorder.release();
+//  }
+//  private void processAudioData() {
+//    OutputStream rawFileStream = null;
+//    byte data[] = new byte[mMinBufferSize];
+//    try {
+//      rawFileStream = new BufferedOutputStream(
+//          new FileOutputStream(new File("/sdcard/record_loopback.raw")));
+//    } catch (FileNotFoundException e) {
+//      Log.d(LOG_TAG, "Can't open file.", e);
+//    }
+//    long startTimeMs = System.currentTimeMillis();
+//    while (System.currentTimeMillis() - startTimeMs < 5000) {
+//      int nbytes = mRecorder.read(data, 0, mMinBufferSize);
+//      if (nbytes <= 0) {
+//        continue;
+//      }
+//      try {
+//        rawFileStream.write(data);
+//      } catch (IOException e) {
+//        Log.e(LOG_TAG, "Error on writing raw file.", e);
+//      }
+//    }
+//    try {
+//      rawFileStream.close();
+//    } catch (IOException e) {
+//    }
+//    Log.d(LOG_TAG, "Exit audio recording.");
+//  }
+
+
 }

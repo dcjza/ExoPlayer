@@ -23,6 +23,7 @@ import java.nio.ByteBuffer;
 /**
  * An {@link AudioProcessor} that applies a mapping from input channels onto specified output
  * channels. This can be used to reorder, duplicate or discard channels.
+ * 一个AudioProcessor，将输入通道的映射应用于指定的输出通道。 这可用于重新排序，复制或放弃频道。
  */
 /* package */ final class ChannelMappingAudioProcessor extends BaseAudioProcessor {
 

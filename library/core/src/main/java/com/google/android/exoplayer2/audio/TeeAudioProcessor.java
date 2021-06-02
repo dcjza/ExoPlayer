@@ -26,6 +26,8 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Audio processor that outputs its input unmodified and also outputs its input to a given sink.
@@ -36,6 +38,9 @@ import java.nio.ByteOrder;
  * after playback speed adjustment and silence skipping have been applied it is necessary to pass a
  * custom {@link com.google.android.exoplayer2.audio.DefaultAudioSink.AudioProcessorChain} when
  * creating the audio sink, and include this audio processor after all other audio processors.
+ * 音频处理器，其输出保持不变，并且将其输入输出到给定的接收器。 这旨在用于诊断和调试。
+ * 该音频处理器可以插入音频处理器链中，以在应用特定处理步骤之前/之后访问音频数据。
+ * 例如，要在应用了播放速度调整和静音跳过之后才能获得音频输出，则在创建音频接收器时必须传递自定义的DefaultAudioSink.AudioProcessorChain，并将此音频处理器包括在所有其他音频处理器之后。
  */
 public final class TeeAudioProcessor extends BaseAudioProcessor {
 
@@ -110,6 +115,8 @@ public final class TeeAudioProcessor extends BaseAudioProcessor {
    *
    * <p>Note: if writing to external storage it's necessary to grant the {@code
    * WRITE_EXTERNAL_STORAGE} permission.
+   * 音频缓冲区的接收器，用于将输出音频作为具有给定路径前缀的.wav文件写入。 在刷新音频处理器后处理新的音频数据时，计数器会增加，并将其值附加到输出文件名。
+   * 注意：如果要写入外部存储，则必须授予WRITE_EXTERNAL_STORAGE权限。
    */
   public static final class WavFileAudioBufferSink implements AudioBufferSink {
 
@@ -236,7 +243,7 @@ public final class TeeAudioProcessor extends BaseAudioProcessor {
     }
 
     private String getNextOutputFileName() {
-      return Util.formatInvariant("%s-%04d.wav", outputFileNamePrefix, counter++);
+      return Util.formatInvariant("%s-%s-%04d.wav", outputFileNamePrefix,new SimpleDateFormat("MMddHHmm").format(new Date()), counter++);
     }
   }
 }

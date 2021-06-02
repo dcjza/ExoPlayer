@@ -324,6 +324,7 @@ import java.nio.ByteBuffer;
   /**
    * Attempts to configure the {@link #encoder} and Sonic (if applicable), if they have not been
    * configured yet, and returns whether they have been configured.
+   * 尝试配置编码器和 Sonic（如果适用）（如果尚未配置），并返回是否已配置。
    */
   private boolean ensureEncoderAndAudioProcessingConfigured() throws ExoPlaybackException {
     if (encoder != null) {
