@@ -536,17 +536,23 @@ public final class DefaultAudioSink implements AudioSink {
         for (int i = 0; i < outputChannels.length; i++) {
           outputChannels[i] = i;
         }
-      }else if(inputFormat.channelCount == 2 && outputChannels == null){
-        outputChannels = new int[6];
-        for (int i = 0; i < outputChannels.length; i++) {
-          outputChannels[i] = i % 2 == 0 ? 0 : 1;
-        }
-      }else if(inputFormat.channelCount == 1 && outputChannels == null){
-        outputChannels = new int[6];
-        for (int i = 0; i < outputChannels.length; i++) {
-          outputChannels[i] = 0;
+      }
+
+      //android 6.0的盒子，运行以下代码会导致视频画面不播放
+      if(Util.SDK_INT > 25){
+        if(inputFormat.channelCount == 2 && outputChannels == null){
+          outputChannels = new int[6];
+          for (int i = 0; i < outputChannels.length; i++) {
+            outputChannels[i] = i % 2 == 0 ? 0 : 1;
+          }
+        }else if(inputFormat.channelCount == 1 && outputChannels == null){
+          outputChannels = new int[6];
+          for (int i = 0; i < outputChannels.length; i++) {
+            outputChannels[i] = 0;
+          }
         }
       }
+
       channelMappingAudioProcessor.setChannelMap(outputChannels);
 
       AudioProcessor.AudioFormat outputFormat =

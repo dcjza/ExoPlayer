@@ -588,6 +588,14 @@
         "uri": "http://192.168.66.99/res/4K Istanbul City.webm"
       },
       {
+        "name": "4K Istanbul local",
+        "uri": "/mnt/sdcard/SENRSL/4K Istanbul City.webm"
+      },
+      {
+        "name": "4K Istanbul 1.98",
+        "uri": "http://192.168.1.98/res/4K Istanbul City.webm"
+      },
+      {
         "name": "4K 三星",
         "uri": "http://192.168.66.99/res/DEMO SAMSUNG 4K HDR 60 FPS 2019.mkv"
       },

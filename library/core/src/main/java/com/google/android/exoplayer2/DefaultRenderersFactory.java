@@ -644,6 +644,8 @@ public class DefaultRenderersFactory implements RenderersFactory {
        new TeeAudioProcessor(new TeeAudioProcessor.WavFileAudioBufferSink("/mnt/sdcard/SENRSL/dc"))
     );
 
+//    DefaultAudioSink.AudioProcessorChain chain =  new DefaultAudioProcessorChain();
+
     AudioSink audioSink = new DefaultAudioSink(
         AudioCapabilities.getCapabilities(context),
         chain,
