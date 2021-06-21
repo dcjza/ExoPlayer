@@ -640,11 +640,15 @@ public class DefaultRenderersFactory implements RenderersFactory {
       boolean enableFloatOutput,
       boolean enableAudioTrackPlaybackParams,
       boolean enableOffload) {
-    DefaultAudioSink.AudioProcessorChain chain =  new DefaultAudioProcessorChain(
-       new TeeAudioProcessor(new TeeAudioProcessor.WavFileAudioBufferSink("/mnt/sdcard/SENRSL/dc"))
-    );
 
-//    DefaultAudioSink.AudioProcessorChain chain =  new DefaultAudioProcessorChain();
+    DefaultAudioSink.AudioProcessorChain chain;
+
+    if(AiderContent.isRecord)
+      chain=  new DefaultAudioProcessorChain(
+         new TeeAudioProcessor(new TeeAudioProcessor.WavFileAudioBufferSink("/mnt/sdcard/SENRSL/dc"))
+      );
+    else
+      chain =  new DefaultAudioProcessorChain();
 
     AudioSink audioSink = new DefaultAudioSink(
         AudioCapabilities.getCapabilities(context),
@@ -655,4 +659,5 @@ public class DefaultRenderersFactory implements RenderersFactory {
 
     return audioSink;
   }
+
 }

@@ -30,6 +30,7 @@ import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import com.google.android.exoplayer2.AiderContent;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.Format;
 import com.google.android.exoplayer2.PlaybackParameters;
@@ -539,7 +540,8 @@ public final class DefaultAudioSink implements AudioSink {
       }
 
       //android 6.0的盒子，运行以下代码会导致视频画面不播放
-      if(Util.SDK_INT > 25){
+      if(Util.SDK_INT > 25 && AiderContent.isUp6){
+        Logger.w("上混");
         if(inputFormat.channelCount == 2 && outputChannels == null){
           outputChannels = new int[6];
           for (int i = 0; i < outputChannels.length; i++) {
